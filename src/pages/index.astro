@@ -1,0 +1,51 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import ProductCard from '../components/ProductCard.astro';
+import PostCard from '../components/PostCard.astro';
+import hero from '../assets/khu-clo/ho-ca.png';
+import { products, money } from '../data/products.js';
+import { posts } from '../data/posts.js';
+
+const clo = products[0];
+---
+<Base>
+  <section class="hero wrap">
+    <div class="hero-box">
+      <div class="hero-text">
+        <span class="eyebrow">Hóa chất duy nhất anh em cần mua</span>
+        <h1>Khử Clo & Chloramin trong 2 phút</h1>
+        <p>Tinh khiết 100%, an toàn tuyệt đối cho cá, tép và hệ vi sinh. Chai 230 ml, {money(clo.price)}.</p>
+        <div class="hero-actions">
+          <a class="btn accent" href={`/san-pham/${clo.slug}/`}>Xem sản phẩm</a>
+          <a class="btn ghost-light" href={`/blog/${posts[0].slug}/`}>Bắt đầu nuôi cá</a>
+        </div>
+      </div>
+      <Image class="hero-img" src={hero} alt="Chai khử Clo Thủy Sinh TH đặt cạnh hồ thủy sinh" widths={[480, 640, 900]} sizes="(max-width: 900px) 100vw, 560px" format="webp" loading="eager" />
+    </div>
+  </section>
+
+  <section class="section wrap" aria-labelledby="sp">
+    <div class="section-head">
+      <h2 id="sp">Sản phẩm</h2>
+      <a class="link-more" href="/san-pham/">Xem tất cả</a>
+    </div>
+    <div class="grid products">
+      {products.map((p, i) => <ProductCard product={p} eager={i < 4} />)}
+      <a class="all-tile" href={`/blog/${posts[0].slug}/`}>
+        <strong>Mới nuôi cá?</strong>
+        <span>Đọc 15 điều cần làm</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="wrap" aria-labelledby="bv">
+    <div class="section-head">
+      <h2 id="bv">Blog về bể cá</h2>
+      <a class="link-more" href="/blog/">Xem tất cả</a>
+    </div>
+    <div class="grid posts">
+      {posts.map((p) => <PostCard post={p} />)}
+    </div>
+  </section>
+</Base>

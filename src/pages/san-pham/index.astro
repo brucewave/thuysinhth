@@ -1,0 +1,19 @@
+---
+import Base from '../../layouts/Base.astro';
+import Crumbs from '../../components/Crumbs.astro';
+import ProductCard from '../../components/ProductCard.astro';
+import { categories, products } from '../../data/products.js';
+---
+<Base title="Tất cả sản phẩm" description="Tất cả sản phẩm của Thủy Sinh TH: khử Clo, thức ăn gel, thức ăn sổ giun, vi sinh bào tử.">
+  <Crumbs items={[{ name: 'Sản phẩm' }]} />
+  <div class="wrap">
+    <h1 class="page-title">Tất cả sản phẩm</h1>
+    <nav class="filters" aria-label="Danh mục">
+      <a href="/san-pham/" aria-current="page">Tất cả</a>
+      {categories.map((c) => <a href={`/danh-muc/${c.slug}/`}>{c.name}</a>)}
+    </nav>
+    <div class="grid products">
+      {products.map((p) => <ProductCard product={p} />)}
+    </div>
+  </div>
+</Base>

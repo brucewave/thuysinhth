@@ -1,0 +1,26 @@
+---
+import Base from '../../layouts/Base.astro';
+import Crumbs from '../../components/Crumbs.astro';
+import ProductCard from '../../components/ProductCard.astro';
+import { categories, products } from '../../data/products.js';
+
+export function getStaticPaths() {
+  return categories.map((c) => ({ params: { slug: c.slug }, props: { category: c } }));
+}
+
+const { category } = Astro.props;
+const list = products.filter((p) => p.category === category.slug);
+---
+<Base title={category.name}>
+  <Crumbs items={[{ name: 'Sản phẩm', url: '/san-pham/' }, { name: category.name }]} />
+  <div class="wrap">
+    <h1 class="page-title">{category.name}</h1>
+    <nav class="filters" aria-label="Danh mục">
+      <a href="/san-pham/">Tất cả</a>
+      {categories.map((c) => <a href={`/danh-muc/${c.slug}/`} aria-current={c.slug === category.slug ? 'page' : undefined}>{c.name}</a>)}
+    </nav>
+    <div class="grid products">
+      {list.map((p) => <ProductCard product={p} />)}
+    </div>
+  </div>
+</Base>

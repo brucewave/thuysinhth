@@ -1,0 +1,13 @@
+---
+import { Image } from 'astro:assets';
+
+const { post } = Astro.props;
+---
+<a class="post-card" href={`/blog/${post.slug}/`}>
+  <Image src={post.image.src} alt={post.image.alt} widths={[300, 500]} sizes="(max-width: 560px) 100vw, 260px" format="webp" />
+  <div>
+    <h3>{post.title}</h3>
+    <p>{post.excerpt}</p>
+    <span>Đọc tiếp</span>
+  </div>
+</a>

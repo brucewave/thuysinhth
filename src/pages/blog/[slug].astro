@@ -1,0 +1,28 @@
+---
+import { Image, getImage } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import Crumbs from '../../components/Crumbs.astro';
+import { posts } from '../../data/posts.js';
+
+export function getStaticPaths() {
+  return posts.map((post) => ({ params: { slug: post.slug }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const next = posts.find((p) => p.slug !== post.slug);
+const og = await getImage({ src: post.image.src, width: 1000, format: 'jpg' });
+---
+<Base title={post.title} description={post.excerpt} image={og.src}>
+  <Crumbs items={[{ name: 'Blog', url: '/blog/' }, { name: post.title }]} />
+  <article class="article wrap">
+    <h1 class="page-title">{post.title}</h1>
+    <Image src={post.image.src} alt={post.image.alt} widths={[480, 760]} sizes="(max-width: 760px) 100vw, 760px" format="webp" loading="eager" />
+    {post.body.map((b) => {
+      if (typeof b === 'string') return <p>{b}</p>;
+      if (b.h) return <h2>{b.h}</h2>;
+      if (b.caps) return <p class="caps">{b.caps}</p>;
+      return <ol>{b.ol.map((li) => <li>{li}</li>)}</ol>;
+    })}
+    <p><a class="link-more" href={`/blog/${next.slug}/`}>Đọc tiếp: {next.title}</a></p>
+  </article>
+</Base>

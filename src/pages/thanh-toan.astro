@@ -1,0 +1,163 @@
+---
+import Base from '../layouts/Base.astro';
+import Crumbs from '../components/Crumbs.astro';
+import { site } from '../data/site.js';
+---
+<Base title="Đặt hàng">
+  <Crumbs items={[{ name: 'Đặt hàng' }]} />
+  <div class="wrap">
+    <h1 class="page-title">Đặt hàng</h1>
+
+    <p class="note" data-empty hidden>Giỏ hàng đang trống. <a href="/san-pham/">Xem sản phẩm</a></p>
+
+    <div class="checkout" data-checkout hidden>
+      <form novalidate data-endpoint={site.orderEndpoint} data-zalo={site.zalo}>
+        <label class="field">
+          <span>Họ và tên</span>
+          <input name="name" autocomplete="name" required />
+          <em hidden>Vui lòng nhập họ và tên.</em>
+        </label>
+        <label class="field">
+          <span>Số điện thoại</span>
+          <input name="phone" type="tel" autocomplete="tel" inputmode="tel" required pattern="(\+84|0)[0-9 .]{8,12}" />
+          <em hidden>Vui lòng nhập số điện thoại hợp lệ, ví dụ 0901234567.</em>
+        </label>
+        <label class="field">
+          <span>Địa chỉ nhận hàng</span>
+          <textarea name="address" rows="3" autocomplete="street-address" required></textarea>
+          <em hidden>Vui lòng nhập địa chỉ nhận hàng.</em>
+        </label>
+        <label class="field">
+          <span>Ghi chú (không bắt buộc)</span>
+          <textarea name="note" rows="2"></textarea>
+        </label>
+        <button class="btn full" type="submit">{site.orderEndpoint ? 'Gửi đơn hàng' : 'Tiếp tục'}</button>
+        <p>{site.name} sẽ liên hệ để xác nhận đơn, phí giao hàng và cách thanh toán.</p>
+      </form>
+      <aside class="summary" aria-label="Tóm tắt đơn hàng">
+        <h2>Đơn hàng</h2>
+        <ul data-lines></ul>
+        <div class="cart-total"><span>Tạm tính</span><span data-total></span></div>
+      </aside>
+    </div>
+
+    <div data-done hidden>
+      <p class="note" data-done-text></p>
+      <div data-manual hidden>
+        <textarea class="order-text" readonly aria-label="Nội dung đơn hàng"></textarea>
+        <div class="stack">
+          <button class="btn" type="button" data-copy>Sao chép nội dung đơn</button>
+          {site.zalo && <a class="btn alt" href={`https://zalo.me/${site.zalo}`} target="_blank" rel="noopener">Mở Zalo</a>}
+        </div>
+      </div>
+    </div>
+  </div>
+</Base>
+
+<script>
+  import { cartLines, cartTotal, clearCart } from '../scripts/store.js';
+
+  const $ = (s) => document.querySelector(s);
+  const form = $('form[data-endpoint]');
+  const money = (n) => n.toLocaleString('vi-VN') + ' VNĐ';
+
+  function render() {
+    const lines = cartLines();
+    if ($('[data-done]').hidden === false) return;
+    $('[data-empty]').hidden = lines.length > 0;
+    $('[data-checkout]').hidden = lines.length === 0;
+    const list = $('[data-lines]');
+    list.replaceChildren(
+      ...lines.map((l) => {
+        const li = document.createElement('li');
+        li.innerHTML = '<span></span><span></span>';
+        li.children[0].textContent = `${l.name} × ${l.qty}`;
+        li.children[1].textContent = money(l.total);
+        return li;
+      }),
+    );
+    $('[data-total]').textContent = money(cartTotal());
+  }
+
+  function validate() {
+    let firstBad;
+    form.querySelectorAll('[required]').forEach((f) => {
+      const ok = f.value.trim() !== '' && f.checkValidity();
+      f.closest('.field').querySelector('em').hidden = ok;
+      f.setAttribute('aria-invalid', !ok);
+      if (!ok && !firstBad) firstBad = f;
+    });
+    firstBad?.focus();
+    return !firstBad;
+  }
+
+  function orderText(data, lines) {
+    return [
+      'ĐƠN HÀNG THỦY SINH TH',
+      ...lines.map((l) => `- ${l.name} (${l.size}) x ${l.qty}: ${money(l.total)}`),
+      `Tạm tính: ${money(cartTotal())}`,
+      `Họ tên: ${data.name}`,
+      `SĐT: ${data.phone}`,
+      `Địa chỉ: ${data.address}`,
+      data.note ? `Ghi chú: ${data.note}` : '',
+    ]
+      .filter(Boolean)
+      .join('\n');
+  }
+
+  function finish(message, manualText) {
+    $('[data-checkout]').hidden = true;
+    $('[data-done]').hidden = false;
+    $('[data-done-text]').textContent = message;
+    $('[data-manual]').hidden = !manualText;
+    if (manualText) $('.order-text').value = manualText;
+    window.scrollTo(0, 0);
+  }
+
+  form.addEventListener('input', (e) => {
+    const em = e.target.closest('.field')?.querySelector('em');
+    if (em && !em.hidden && e.target.checkValidity()) em.hidden = true;
+  });
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!validate()) return;
+    const data = Object.fromEntries(new FormData(form));
+    const lines = cartLines();
+    const text = orderText(data, lines);
+    const endpoint = form.dataset.endpoint;
+
+    if (!endpoint) {
+      const channel = form.dataset.zalo ? `qua Zalo ${form.dataset.zalo}` : 'cho cửa hàng';
+      return finish(`Bước cuối: sao chép nội dung đơn dưới đây rồi gửi ${channel} để hoàn tất đặt hàng.`, text);
+    }
+
+    const button = form.querySelector('[type=submit]');
+    button.disabled = true;
+    button.textContent = 'Đang gửi...';
+    try {
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({ ...data, items: lines, total: cartTotal(), text }),
+      });
+      if (!res.ok) throw new Error(res.status);
+      clearCart();
+      finish('Đã nhận đơn hàng. Cảm ơn bạn, cửa hàng sẽ sớm liên hệ để xác nhận.');
+    } catch {
+      finish('Chưa gửi được đơn. Vui lòng sao chép nội dung dưới đây và gửi cho cửa hàng.', text);
+    }
+  });
+
+  $('[data-copy]').addEventListener('click', async (e) => {
+    try {
+      await navigator.clipboard.writeText($('.order-text').value);
+      e.target.textContent = 'Đã sao chép';
+    } catch {
+      $('.order-text').select();
+    }
+  });
+
+  document.addEventListener('cart:change', render);
+  render();
+</script>

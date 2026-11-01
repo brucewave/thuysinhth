@@ -1,0 +1,30 @@
+---
+import { Image } from 'astro:assets';
+import mark from '../assets/brand/mark.png';
+import { money } from '../data/products.js';
+
+const { product: p, eager = false } = Astro.props;
+const photo = p.images?.[0];
+---
+<article class="product-card">
+  <a class="product-link" href={`/san-pham/${p.slug}/`}>
+    <div class="product-photo">
+      {photo ? (
+        <Image src={photo.src} alt={photo.alt} widths={[280, 420, 560]} sizes="(max-width: 900px) 50vw, 290px" format="webp" loading={eager ? 'eager' : 'lazy'} />
+      ) : (
+        <Image class="placeholder" src={mark} alt="" width={240} format="webp" />
+      )}
+      {p.soldOut && <span class="tag">Hết hàng</span>}
+    </div>
+    <div class="product-info">
+      <h3>{p.name}</h3>
+      {p.size && <small>{p.size}</small>}
+      {p.price && <span class="price">{money(p.price)}</span>}
+    </div>
+  </a>
+  {p.soldOut ? (
+    <button class="btn" type="button" disabled>Hết hàng</button>
+  ) : (
+    <button class="btn" type="button" data-add={p.slug}>Thêm vào giỏ</button>
+  )}
+</article>

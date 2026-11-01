@@ -1,0 +1,145 @@
+---
+import { Image, getImage } from 'astro:assets';
+import '../styles/global.css';
+import mark from '../assets/brand/mark.png';
+import { site } from '../data/site.js';
+import { categories, products } from '../data/products.js';
+import { posts } from '../data/posts.js';
+
+const { title, description = site.description, image } = Astro.props;
+const fullTitle = title ? `${title} | ${site.name}` : `${site.name} | ${site.tagline}`;
+
+const catalog = { products: {}, search: [] };
+for (const p of products) {
+  catalog.search.push({ title: p.name, url: `/san-pham/${p.slug}/`, type: p.soldOut ? 'Sản phẩm · Hết hàng' : 'Sản phẩm' });
+  if (p.soldOut) continue;
+  const img = await getImage({ src: p.images[0]?.src ?? mark, width: 144, format: 'webp' });
+  catalog.products[p.slug] = { name: p.name, price: p.price, size: p.size, image: img.src };
+}
+for (const p of posts) catalog.search.push({ title: p.title, url: `/blog/${p.slug}/`, type: 'Bài viết' });
+
+const hasContact = site.phone || site.zalo || site.email || site.address || site.facebook || site.tiktok;
+---
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="vi_VN" />
+    {image && <meta property="og:image" content={image} />}
+    <meta name="theme-color" content="#0a509f" />
+    <link rel="icon" href="/favicon.png" type="image/png" />
+    <slot name="head" />
+  </head>
+  <body>
+    <a class="skip" href="#main">Bỏ qua đến nội dung</a>
+    <header class="site-header">
+      <div class="wrap header-main">
+        <a class="logo" href="/" aria-label={`${site.name}, về trang chủ`}>
+          <Image class="logo-mark" src={mark} alt="" width={84} height={84} fit="contain" format="webp" />
+          <div>
+            <strong>THỦY SINH TH</strong>
+            <span>{site.tagline}</span>
+          </div>
+        </a>
+        <form class="search" role="search">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+          <input type="search" placeholder="Tìm sản phẩm, bài viết" aria-label="Tìm sản phẩm, bài viết" autocomplete="off" />
+          <ul class="search-results" hidden></ul>
+        </form>
+        <div class="promise">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2s7 7.6 7 12.4A7 7 0 0 1 5 14.4C5 9.6 12 2 12 2Z"/></svg>
+          <div><strong>Sản xuất tại Việt Nam</strong><span>Nuôi cá đúng khoa học</span></div>
+        </div>
+        <button class="icon-btn menu-btn" type="button" aria-label="Mở menu" aria-expanded="false">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+        </button>
+        <button class="icon-btn" type="button" data-open-cart aria-label="Mở giỏ hàng">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M3 4h2.5l2.2 11h10.6L20.5 7.5H6.3"/><circle cx="9.5" cy="19.5" r="1.4"/><circle cx="16.5" cy="19.5" r="1.4"/></svg>
+          <span class="cart-count" hidden>0</span>
+        </button>
+      </div>
+      <nav class="site-nav" aria-label="Chính">
+        <ul class="wrap">
+          <li>
+            <details>
+              <summary>Cửa hàng</summary>
+              <div class="dropdown">
+                <a href="/san-pham/">Tất cả sản phẩm</a>
+                {categories.map((c) => <a href={`/danh-muc/${c.slug}/`}>{c.name}</a>)}
+              </div>
+            </details>
+          </li>
+          <li><a href="/danh-muc/thuc-an/">Thức ăn</a></li>
+          <li><a href="/danh-muc/xu-ly-nuoc/">Xử lý nước</a></li>
+          <li><a href="/danh-muc/vi-sinh/">Vi sinh</a></li>
+          <li><a href="/blog/">Blog</a></li>
+          <li><a href="/lien-he/">Liên hệ</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="main"><slot /></main>
+
+    <footer class="site-footer">
+      <div class="wrap">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <h2>{site.name}</h2>
+            <p>Khử Clo, thức ăn gel và vi sinh bào tử sản xuất tại Việt Nam, cùng kiến thức nuôi cá đơn giản, đúng khoa học.</p>
+          </div>
+          <div>
+            <h2>Cửa hàng</h2>
+            <ul>{categories.slice(0, 4).map((c) => <li><a href={`/danh-muc/${c.slug}/`}>{c.name}</a></li>)}</ul>
+          </div>
+          <div>
+            <h2>Kiến thức</h2>
+            <ul>
+              <li><a href="/blog/">Blog về bể cá</a></li>
+              <li><a href={`/blog/${posts[0].slug}/`}>Nuôi cá quá dễ</a></li>
+              <li><a href={`/blog/${posts[1].slug}/`}>Clo, cho ăn và Cycle</a></li>
+            </ul>
+          </div>
+          <div>
+            <h2>Liên hệ</h2>
+            <ul>
+              {site.phone && <li><a href={`tel:${site.phone.replace(/\s/g, '')}`}>{site.phone}</a></li>}
+              {site.zalo && <li><a href={`https://zalo.me/${site.zalo}`}>Zalo</a></li>}
+              {site.email && <li><a href={`mailto:${site.email}`}>{site.email}</a></li>}
+              {site.facebook && <li><a href={site.facebook}>Facebook</a></li>}
+              {site.tiktok && <li><a href={site.tiktok}>TikTok</a></li>}
+              {site.address && <li>{site.address}</li>}
+              {!hasContact && <li><a href="/lien-he/">Trang liên hệ</a></li>}
+            </ul>
+          </div>
+        </div>
+        <p class="copyright">© {new Date().getFullYear()} {site.name}</p>
+      </div>
+    </footer>
+
+    <dialog id="cart" aria-labelledby="cart-title">
+      <div class="cart-head">
+        <h2 id="cart-title">Giỏ hàng</h2>
+        <button class="icon-btn" type="button" data-close-cart aria-label="Đóng giỏ hàng">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 5l14 14M19 5 5 19"/></svg>
+        </button>
+      </div>
+      <ul class="cart-items"></ul>
+      <div class="cart-foot" hidden>
+        <div class="cart-total"><span>Tạm tính</span><span data-cart-total></span></div>
+        <a class="btn full" href="/thanh-toan/">Đặt hàng</a>
+      </div>
+    </dialog>
+
+    <script type="application/json" id="catalog" set:html={JSON.stringify(catalog).replace(/</g, '\\u003c')}></script>
+    <script>
+      import '../scripts/store.js';
+    </script>
+    <slot name="scripts" />
+  </body>
+</html>

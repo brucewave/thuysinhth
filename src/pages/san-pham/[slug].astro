@@ -1,0 +1,131 @@
+---
+import { Image, getImage } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import Crumbs from '../../components/Crumbs.astro';
+import ProductCard from '../../components/ProductCard.astro';
+import mark from '../../assets/brand/mark.png';
+import { site } from '../../data/site.js';
+import { categories, products, money } from '../../data/products.js';
+
+export function getStaticPaths() {
+  return products.map((p) => ({ params: { slug: p.slug }, props: { product: p } }));
+}
+
+const { product: p } = Astro.props;
+const category = categories.find((c) => c.slug === p.category);
+const images = p.images ?? [];
+const related = products.filter((x) => x.slug !== p.slug && !x.soldOut).slice(0, 4);
+const ogImage = images[0] ? (await getImage({ src: images[0].src, width: 1000, format: 'jpg' })).src : undefined;
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Product',
+  name: p.name,
+  brand: { '@type': 'Brand', name: site.name },
+  description: p.headline ?? p.name,
+  ...(p.price && {
+    offers: {
+      '@type': 'Offer',
+      price: p.price,
+      priceCurrency: 'VND',
+      availability: 'https://schema.org/InStock',
+    },
+  }),
+};
+---
+<Base title={p.name} description={p.intro?.[0].slice(0, 155)} image={ogImage}>
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(jsonLd).replace(/</g, '\\u003c')}></script>
+  <Crumbs items={[{ name: category.name, url: `/danh-muc/${category.slug}/` }, { name: p.name }]} />
+  <div class="wrap">
+    {p.headline && <h2 class="pdp-kicker">{p.headline}</h2>}
+    <div class="pdp" style={p.headline ? undefined : 'margin-top:24px'}>
+      <div>
+        <div class="gallery-main">
+          {images.length ? images.map((img, i) => (
+            <Image data-slide={i} src={img.src} alt={img.alt} widths={[420, 640, 900]} sizes="(max-width: 900px) 100vw, 580px" format="webp" loading={i ? 'lazy' : 'eager'} hidden={i > 0} />
+          )) : <Image class="placeholder" src={mark} alt="" width={320} format="webp" />}
+        </div>
+        {images.length > 1 && (
+          <div class="thumbs">
+            {images.map((img, i) => (
+              <button type="button" data-thumb={i} aria-label={`Xem ảnh ${i + 1}`} aria-current={i === 0 ? 'true' : 'false'}>
+                <Image src={img.src} alt="" width={152} format="webp" />
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div class="pdp-info">
+        <h1>{p.name}</h1>
+        {p.soldOut ? (
+          <p class="note">Sản phẩm này hiện đã hết hàng.</p>
+        ) : (
+          <>
+            <p class="price pdp-price">{money(p.price)}</p>
+            <p class="variant">{p.size}</p>
+            <div class="buy">
+              <div class="qty">
+                <button type="button" data-pdp-step="-1" aria-label="Giảm số lượng">−</button>
+                <input data-pdp-qty value="1" readonly aria-label="Số lượng" />
+                <button type="button" data-pdp-step="1" aria-label="Tăng số lượng">+</button>
+              </div>
+              <button class="btn" type="button" data-add={p.slug} data-pdp="1">Thêm vào giỏ</button>
+            </div>
+            <ul class="checks">{p.bullets.map((b) => <li>{b}</li>)}</ul>
+            <div class="pdp-text">{p.intro.map((t) => <p>{t}</p>)}</div>
+            {p.specs && (
+              <div class="spec-box">
+                <h3>{p.specsTitle}</h3>
+                <ul>{p.specs.map((s) => <li>{s}</li>)}</ul>
+              </div>
+            )}
+          </>
+        )}
+      </div>
+    </div>
+
+    {p.sections?.length > 0 && (
+      <section class="science">
+        <h2>{p.sectionsTitle}</h2>
+        <div class="steps">
+          {p.sections.map((s, i) => (
+            <article class="step">
+              <div class="step-no" aria-hidden="true">{i + 1}</div>
+              <div class={`step-body${s.image ? '' : ' plain'}`}>
+                <div>
+                  <h3>{s.title}</h3>
+                  {s.text.map((t) => <p>{t}</p>)}
+                </div>
+                {s.image && <Image src={s.image.src} alt={s.image.alt} width={400} format="webp" />}
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+    )}
+
+    {related.length > 0 && (
+      <section class="section">
+        <div class="section-head"><h2>Có thể bạn cũng cần</h2></div>
+        <div class="grid products">{related.map((r) => <ProductCard product={r} />)}</div>
+      </section>
+    )}
+  </div>
+</Base>
+
+<script>
+  const input = document.querySelector('[data-pdp-qty]');
+  document.querySelectorAll('[data-pdp-step]').forEach((b) =>
+    b.addEventListener('click', () => {
+      input.value = Math.max(1, Number(input.value) + Number(b.dataset.pdpStep));
+    }),
+  );
+  const slides = document.querySelectorAll('[data-slide]');
+  const thumbs = document.querySelectorAll('[data-thumb]');
+  thumbs.forEach((t) =>
+    t.addEventListener('click', () => {
+      slides.forEach((s) => (s.hidden = s.dataset.slide !== t.dataset.thumb));
+      thumbs.forEach((x) => x.setAttribute('aria-current', x === t));
+    }),
+  );
+</script>

@@ -1,0 +1,9 @@
+---
+const { items } = Astro.props;
+---
+<nav class="crumbs wrap" aria-label="Đường dẫn">
+  <ol>
+    <li><a href="/">Trang chủ</a></li>
+    {items.map((i) => <li>{i.url ? <a href={i.url}>{i.name}</a> : <span aria-current="page">{i.name}</span>}</li>)}
+  </ol>
+</nav>

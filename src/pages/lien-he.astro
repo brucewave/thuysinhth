@@ -1,0 +1,27 @@
+---
+import Base from '../layouts/Base.astro';
+import Crumbs from '../components/Crumbs.astro';
+import { site } from '../data/site.js';
+
+const channels = [
+  site.phone && { label: 'Điện thoại', text: site.phone, url: `tel:${site.phone.replace(/\s/g, '')}` },
+  site.zalo && { label: 'Zalo', text: site.zalo, url: `https://zalo.me/${site.zalo}` },
+  site.email && { label: 'Email', text: site.email, url: `mailto:${site.email}` },
+  site.facebook && { label: 'Facebook', text: 'Trang Facebook', url: site.facebook },
+  site.tiktok && { label: 'TikTok', text: '@thuysinhth', url: site.tiktok },
+  site.address && { label: 'Địa chỉ', text: site.address },
+].filter(Boolean);
+---
+<Base title="Liên hệ">
+  <Crumbs items={[{ name: 'Liên hệ' }]} />
+  <div class="wrap">
+    <h1 class="page-title">Liên hệ</h1>
+    {channels.length ? (
+      <div class="spec-box">
+        <ul>{channels.map((c) => <li>{c.label}: {c.url ? <a href={c.url}>{c.text}</a> : c.text}</li>)}</ul>
+      </div>
+    ) : (
+      <p class="note">Thông tin liên hệ đang được cập nhật.</p>
+    )}
+  </div>
+</Base>
