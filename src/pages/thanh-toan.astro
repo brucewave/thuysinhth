@@ -1,17 +1,18 @@
 ---
 import Base from '../layouts/Base.astro';
-import Crumbs from '../components/Crumbs.astro';
 import { site } from '../data/site.js';
 ---
-<Base title="Đặt hàng">
-  <Crumbs items={[{ name: 'Đặt hàng' }]} />
-  <div class="wrap">
-    <h1 class="page-title">Đặt hàng</h1>
+<Base title="Đặt hàng" focus>
+  <div class="checkout" data-checkout hidden>
+    <form novalidate data-endpoint={site.orderEndpoint} data-zalo={site.zalo}>
+      <h1>Đặt hàng</h1>
+      <ul class="checkout-promise">
+        <li>Chưa cần thanh toán ở bước này</li>
+        <li>{site.name} liên hệ xác nhận đơn trước khi giao</li>
+      </ul>
 
-    <p class="note" data-empty hidden>Giỏ hàng đang trống. <a href="/san-pham/">Xem sản phẩm</a></p>
-
-    <div class="checkout" data-checkout hidden>
-      <form novalidate data-endpoint={site.orderEndpoint} data-zalo={site.zalo}>
+      <h2>Liên hệ</h2>
+      <div class="field-row">
         <label class="field">
           <span>Họ và tên</span>
           <input name="name" autocomplete="name" required />
@@ -22,28 +23,49 @@ import { site } from '../data/site.js';
           <input name="phone" type="tel" autocomplete="tel" inputmode="tel" required pattern="(\+84|0)[0-9 .]{8,12}" />
           <em hidden>Vui lòng nhập số điện thoại hợp lệ, ví dụ 0901234567.</em>
         </label>
-        <label class="field">
-          <span>Địa chỉ nhận hàng</span>
-          <textarea name="address" rows="3" autocomplete="street-address" required></textarea>
-          <em hidden>Vui lòng nhập địa chỉ nhận hàng.</em>
-        </label>
-        <label class="field">
-          <span>Ghi chú (không bắt buộc)</span>
-          <textarea name="note" rows="2"></textarea>
-        </label>
-        <label class="check">
-          <input type="checkbox" name="remember" />
-          <span>Lưu thông tin và đơn này trên máy này cho lần sau</span>
-        </label>
-        <button class="btn full" type="submit">{site.orderEndpoint ? 'Gửi đơn hàng' : 'Tiếp tục'}</button>
-        <p>{site.name} sẽ liên hệ để xác nhận đơn, phí giao hàng và cách thanh toán.</p>
-      </form>
-      <aside class="summary" aria-label="Tóm tắt đơn hàng">
-        <h2>Đơn hàng</h2>
-        <ul data-lines></ul>
-        <div class="cart-total"><span>Tạm tính</span><span data-total></span></div>
-      </aside>
-    </div>
+      </div>
+
+      <h2>Giao hàng</h2>
+      <label class="field">
+        <span>Địa chỉ nhận hàng</span>
+        <input name="address" autocomplete="street-address" placeholder="Số nhà, đường, phường/xã, tỉnh/thành phố" required />
+        <em hidden>Vui lòng nhập địa chỉ nhận hàng.</em>
+      </label>
+      <label class="field">
+        <span>Ghi chú (không bắt buộc)</span>
+        <textarea name="note" rows="2"></textarea>
+      </label>
+      <label class="check">
+        <input type="checkbox" name="remember" />
+        <span>Lưu thông tin và đơn này trên máy này cho lần sau</span>
+      </label>
+      <button class="btn full" type="submit">{site.orderEndpoint ? 'Gửi đơn hàng' : 'Tiếp tục'}</button>
+    </form>
+
+    <aside class="checkout-side" aria-label="Tóm tắt đơn hàng">
+      <div class="checkout-summary">
+        <div class="checkout-summary-head">
+          <h2>Đơn hàng</h2>
+          <button type="button" class="link-more" data-open-cart>Sửa giỏ hàng</button>
+        </div>
+        <ul class="checkout-lines" data-lines></ul>
+
+        <section class="checkout-more" data-more hidden>
+          <h3>Đừng quên mua thêm</h3>
+          <ul data-more-list></ul>
+        </section>
+
+        <dl class="checkout-totals">
+          <div><dt>Tạm tính</dt><dd data-subtotal></dd></div>
+          <div><dt>Phí giao hàng</dt><dd>Báo khi xác nhận đơn</dd></div>
+          <div class="grand"><dt>Tổng tiền hàng</dt><dd data-total></dd></div>
+        </dl>
+      </div>
+    </aside>
+  </div>
+
+  <div class="wrap checkout-state">
+    <p class="note" data-empty hidden>Giỏ hàng đang trống. <a href="/san-pham/">Xem sản phẩm</a></p>
 
     <div data-done hidden>
       <p class="note" data-done-text></p>
@@ -59,7 +81,7 @@ import { site } from '../data/site.js';
 </Base>
 
 <script>
-  import { addOrder, cartLines, cartTotal, clearCart, loadProfile, saveProfile } from '../scripts/store.js';
+  import { addOrder, cartLines, cartTotal, clearCart, loadProfile, moreProducts, saveProfile } from '../scripts/store.js';
 
   const $ = (s) => document.querySelector(s);
   const form = $('form[data-endpoint]');
@@ -74,13 +96,35 @@ import { site } from '../data/site.js';
     list.replaceChildren(
       ...lines.map((l) => {
         const li = document.createElement('li');
-        li.innerHTML = '<img alt="" width="64" height="64"><span></span><span class="line-price"></span>';
-        li.children[0].src = l.image;
-        li.children[1].textContent = `${l.name} × ${l.qty}`;
-        li.children[2].textContent = money(l.total);
+        li.innerHTML = '<span class="line-thumb"><img alt="" width="64" height="64"><b></b></span><span class="line-name"><strong></strong><small></small></span><span class="line-price"></span>';
+        li.querySelector('img').src = l.image;
+        li.querySelector('b').textContent = l.qty;
+        li.querySelector('strong').textContent = l.name;
+        li.querySelector('small').textContent = `${l.size} · Số lượng ${l.qty}`;
+        li.querySelector('.line-price').textContent = money(l.total);
         return li;
       }),
     );
+
+    const more = moreProducts().slice(0, 2);
+    $('[data-more]').hidden = !more.length;
+    $('[data-more-list]').replaceChildren(
+      ...more.map(([slug, p]) => {
+        const li = document.createElement('li');
+        li.innerHTML = '<img alt="" width="64" height="64" loading="lazy"><span class="line-name"><a></a><span class="price"></span></span><button class="btn" type="button" data-quiet>Thêm</button>';
+        li.querySelector('img').src = p.image;
+        const link = li.querySelector('a');
+        link.href = `/san-pham/${slug}/`;
+        link.textContent = p.name;
+        li.querySelector('.price').textContent = money(p.price);
+        const button = li.querySelector('button');
+        button.dataset.add = slug;
+        button.setAttribute('aria-label', `Thêm ${p.name} vào đơn`);
+        return li;
+      }),
+    );
+
+    $('[data-subtotal]').textContent = money(cartTotal());
     $('[data-total]').textContent = money(cartTotal());
   }
 

@@ -11,7 +11,7 @@ import { site } from '../data/site.js';
 import { categories, products } from '../data/products.js';
 import { posts } from '../data/posts.js';
 
-const { title, description = site.description, image } = Astro.props;
+const { title, description = site.description, image, focus = false } = Astro.props;
 const fullTitle = title ? `${title} | ${site.name}` : `${site.name} | ${site.tagline}`;
 
 const catalog = { products: {}, search: [] };
@@ -99,7 +99,7 @@ const hasContact =site.phone || site.zalo || site.email || site.address || site.
     <link rel="icon" href="/favicon.png" type="image/png" />
     <slot name="head" />
   </head>
-  <body>
+  <body class:list={{ 'focus-page': focus }}>
     <a class="skip" href="#main">Bỏ qua đến nội dung</a>
     <header class="site-header">
       <div class="wrap header-main">
@@ -227,12 +227,18 @@ const hasContact =site.phone || site.zalo || site.email || site.address || site.
 
     <dialog id="cart" aria-labelledby="cart-title">
       <div class="cart-head">
-        <h2 id="cart-title">Giỏ hàng</h2>
+        <h2 id="cart-title">Giỏ hàng <span data-cart-number></span></h2>
         <button class="icon-btn" type="button" data-close-cart aria-label="Đóng giỏ hàng">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 5l14 14M19 5 5 19"/></svg>
         </button>
       </div>
-      <ul class="cart-items"></ul>
+      <div class="cart-body">
+        <ul class="cart-items"></ul>
+        <section class="cart-more" aria-labelledby="cart-more-title" hidden>
+          <h3 id="cart-more-title">Có thể bạn cần thêm</h3>
+          <div class="cart-more-list"></div>
+        </section>
+      </div>
       <div class="cart-foot" hidden>
         <div class="cart-total"><span>Tạm tính</span><span data-cart-total></span></div>
         <a class="btn full" href="/thanh-toan/">Đặt hàng</a>

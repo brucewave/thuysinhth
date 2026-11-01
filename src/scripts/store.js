@@ -32,6 +32,9 @@ export function cartLines() {
 
 export const cartTotal = () => cartLines().reduce((sum, l) => sum + l.total, 0);
 
+// Sản phẩm đang bán mà khách chưa có trong giỏ, dùng cho các khu gợi ý.
+export const moreProducts = () => Object.entries(catalog.products).filter(([slug]) => !cart[slug]);
+
 export function clearCart() {
   cart = {};
   save();
@@ -94,21 +97,40 @@ function render() {
     ? lines
         .map(
           (l) => `<li class="cart-item">
-            <img src="${l.image}" alt="" width="72" height="72">
-            <div>
-              <a href="/san-pham/${l.slug}/">${esc(l.name)}</a>
-              <div class="price">${money(l.price)}</div>
-              <div class="qty">
-                <button type="button" data-step="-1" data-slug="${l.slug}" aria-label="Giảm số lượng ${esc(l.name)}">−</button>
-                <output>${l.qty}</output>
-                <button type="button" data-step="1" data-slug="${l.slug}" aria-label="Tăng số lượng ${esc(l.name)}">+</button>
+            <img src="${l.image}" alt="" width="88" height="88">
+            <div class="cart-item-info">
+              <div class="cart-item-top">
+                <a href="/san-pham/${l.slug}/">${esc(l.name)}</a>
+                <button type="button" class="remove" data-remove="${l.slug}" aria-label="Xóa ${esc(l.name)} khỏi giỏ">×</button>
+              </div>
+              <small>${esc(l.size)}</small>
+              <div class="cart-item-bottom">
+                <div class="qty">
+                  <button type="button" data-step="-1" data-slug="${l.slug}" aria-label="Giảm số lượng ${esc(l.name)}">−</button>
+                  <output>${l.qty}</output>
+                  <button type="button" data-step="1" data-slug="${l.slug}" aria-label="Tăng số lượng ${esc(l.name)}">+</button>
+                </div>
+                <span class="price">${money(l.total)}</span>
               </div>
             </div>
-            <button type="button" class="remove" data-remove="${l.slug}">Xóa</button>
           </li>`,
         )
         .join('')
     : '<li class="cart-empty">Giỏ hàng đang trống.</li>';
+
+  document.querySelector('[data-cart-number]').textContent = count || '';
+
+  const more = moreProducts();
+  document.querySelector('.cart-more').hidden = !more.length;
+  document.querySelector('.cart-more-list').innerHTML = more
+    .map(
+      ([slug, p]) => `<article class="cart-more-item">
+        <a href="/san-pham/${slug}/"><img src="${p.image}" alt="" width="144" height="144" loading="lazy">${esc(p.name)}</a>
+        <span class="price">${money(p.price)}</span>
+        <button class="btn" type="button" data-add="${slug}" aria-label="Thêm ${esc(p.name)} vào giỏ">Thêm</button>
+      </article>`,
+    )
+    .join('');
 
   document.querySelector('.cart-foot').hidden = !lines.length;
   document.querySelector('[data-cart-total]').textContent = money(cartTotal());
@@ -126,6 +148,7 @@ document.addEventListener('click', (e) => {
     const input = document.querySelector('[data-pdp-qty]');
     const qty = t.dataset.pdp ? Number(input.value) : 1;
     setQty(t.dataset.add, (cart[t.dataset.add] || 0) + qty);
+    if (dialog.open || 'quiet' in t.dataset) return;
     // motion.js chặn sự kiện này để chạy hiệu ứng rồi tự mở giỏ.
     const detail = { button: t, image: catalog.products[t.dataset.add].image };
     if (document.dispatchEvent(new CustomEvent('cart:fly', { cancelable: true, detail }))) dialog.showModal();
