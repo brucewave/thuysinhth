@@ -83,7 +83,10 @@ const bagIcon =
           {!p.soldOut && <a class="rating" href="#danh-gia"><Rating product={p} /></a>}
         </div>
         {p.soldOut ? (
-          <p class="note">Sản phẩm này hiện đã hết hàng.</p>
+          <>
+            <p class="price pdp-price">Sắp ra mắt</p>
+            <p class="note">Sản phẩm này chưa mở bán. Nhắn <a href={zaloUrl}>Zalo</a> để được báo khi có hàng.</p>
+          </>
         ) : (
           <>
             <p class="price pdp-price">{money(p.price)}</p>
@@ -148,7 +151,7 @@ const bagIcon =
         ) : (
           <p class="note">Chưa có đánh giá nào. Bạn đã dùng sản phẩm này? Hãy gửi cảm nhận cho {site.name} qua <a href={zaloUrl}>Zalo</a>.</p>
         )}
-        {review.sample && <p class="note">Đánh giá mẫu, chỉ hiện khi xem trên máy, không có trên bản đưa lên mạng.</p>}
+        {review.sample && <p class="note">Đánh giá mẫu để demo giao diện, không phải khách hàng thật.</p>}
         {review.list.map((r) => (
           <article class="review">
             <Rating product={p} stars={r.stars} />
@@ -161,6 +164,7 @@ const bagIcon =
               </div>
             </div>
             <p>{r.text}</p>
+            {r.photo && <Image class="review-photo" src={r.photo} alt="Ảnh hồ cá minh họa" width={320} format="webp" />}
             <div class="review-item">
               <Image src={images[0]?.src ?? mark} alt="" width={96} format="webp" />
               <small>{p.size}</small>

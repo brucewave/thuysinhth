@@ -172,6 +172,10 @@ button { cursor: pointer; }
 .hero-text .eyebrow { color: var(--yellow); font-weight: 600; }
 .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; }
 .hero-img { width: 100%; height: 100%; object-fit: cover; }
+.hero-box { position: relative; }
+.ripple { position: absolute; opacity: 0; pointer-events: none; transition: opacity .25s; }
+.fly-item { position: fixed; left: 0; top: 0; z-index: 90; width: 88px; height: 88px; object-fit: cover; border-radius: 50%; border: 3px solid #fff; box-shadow: 0 6px 18px rgba(8, 60, 120, .35); pointer-events: none; }
+.fly-bubble { position: fixed; left: 0; top: 0; z-index: 89; border: 1.5px solid var(--blue); border-radius: 50%; background: rgba(255, 255, 255, .55); pointer-events: none; }
 .tank { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
 .hero-slider > .tank { left: 56px; width: calc(100% - 112px); border-radius: 14px; }
 
@@ -187,10 +191,6 @@ button { cursor: pointer; }
 .product-photo { position: relative; aspect-ratio: 1; background: #fbf7e8; }
 .product-photo img { width: 100%; height: 100%; object-fit: cover; }
 .product-photo img.placeholder { padding: 24%; object-fit: contain; opacity: .55; }
-.tag {
-  position: absolute; top: 10px; left: 10px; padding: 3px 10px; border-radius: 6px;
-  background: var(--ink); color: #fff; font-size: .8rem; font-weight: 600;
-}
 .product-info { display: flex; flex-direction: column; flex: 1; gap: 6px; padding: 16px 12px 18px; }
 .product-info h3 { font-size: 1.05rem; font-weight: 800; }
 .product-info small { color: var(--muted); }
@@ -326,6 +326,7 @@ button { cursor: pointer; }
 .review-who small { display: block; color: var(--muted); }
 .verified { margin-left: 8px; padding: 1px 9px; border: 1px solid var(--ink); border-radius: 12px; font-size: .8rem; }
 .review > p { margin: 12px 0; }
+.review-photo { width: 160px; height: 160px; margin-bottom: 12px; object-fit: cover; border-radius: 8px; }
 .review-item { display: flex; align-items: center; gap: 12px; padding: 8px; border-radius: 8px; background: #e3ebf5; }
 .review-item img { width: 48px; height: 48px; object-fit: cover; border-radius: 6px; background: #fff; }
 .review-item small { color: var(--muted); }

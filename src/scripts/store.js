@@ -126,7 +126,9 @@ document.addEventListener('click', (e) => {
     const input = document.querySelector('[data-pdp-qty]');
     const qty = t.dataset.pdp ? Number(input.value) : 1;
     setQty(t.dataset.add, (cart[t.dataset.add] || 0) + qty);
-    dialog.showModal();
+    // motion.js chặn sự kiện này để chạy hiệu ứng rồi tự mở giỏ.
+    const detail = { button: t, image: catalog.products[t.dataset.add].image };
+    if (document.dispatchEvent(new CustomEvent('cart:fly', { cancelable: true, detail }))) dialog.showModal();
   }
 });
 

@@ -15,14 +15,13 @@ const photo = p.images?.[0];
       ) : (
         <Image class="placeholder" src={mark} alt="" width={240} format="webp" />
       )}
-      {p.soldOut && <span class="tag">Hết hàng</span>}
       {p.tempPhoto && <span class="temp-tag">Ảnh minh họa</span>}
     </div>
     <div class="product-info">
       <h3>{p.name}</h3>
       {p.size && <small>{p.size}</small>}
       {!p.soldOut && <div class="rating"><Rating product={p} /></div>}
-      {p.price && <span class="price">{money(p.price)}</span>}
+      <span class="price">{p.soldOut ? 'Sắp ra mắt' : money(p.price)}</span>
     </div>
   </a>
   {!p.soldOut && (

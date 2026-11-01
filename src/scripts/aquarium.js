@@ -28,15 +28,22 @@ function drawBubble(ctx, b) {
   ctx.fill();
 }
 
+// Cá chỉ bơi trong vùng ảnh của banner: bên phải trên máy tính, phía trên trên điện thoại. Chữ luôn dễ đọc.
+function zoneOf(w, h) {
+  return innerWidth > 900 ? { x: w * 0.56, y: h * 0.1, w: w * 0.4, h: h * 0.8 } : { x: w * 0.08, y: 24, w: w * 0.84, h: 170 };
+}
+
+const pointIn = (zone) => ({ x: random(zone.x, zone.x + zone.w), y: random(zone.y, zone.y + zone.h) });
+const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+
 function makeFish(w, h, size, color) {
-  const x = random(0, w);
-  const y = random(0, h);
+  const { x, y } = pointIn(zoneOf(w, h));
   return {
     size,
     color,
     angle: random(0, TAU),
     spine: Array.from({ length: SEGMENTS }, () => ({ x, y })),
-    goal: { x: random(0, w), y: random(0, h) },
+    goal: { x, y },
     wait: 0,
     breath: random(1, 4),
     phase: random(0, TAU),
@@ -45,14 +52,17 @@ function makeFish(w, h, size, color) {
 
 function moveFish(f, dt, t, w, h, pointer, bubbles) {
   const head = f.spine[0];
+  const zone = zoneOf(w, h);
   f.wait -= dt;
   if (f.wait <= 0 || Math.hypot(f.goal.x - head.x, f.goal.y - head.y) < 30) {
-    f.goal = { x: random(w * 0.05, w * 0.95), y: random(h * 0.1, h * 0.9) };
+    f.goal = pointIn(zone);
     f.wait = random(3, 7);
   }
 
   const chasing = pointer.active;
-  const target = chasing ? pointer : f.goal;
+  const target = chasing
+    ? { x: clamp(pointer.x, zone.x, zone.x + zone.w), y: clamp(pointer.y, zone.y, zone.y + zone.h) }
+    : f.goal;
   const distance = Math.hypot(target.x - head.x, target.y - head.y);
   let turn = Math.atan2(target.y - head.y, target.x - head.x) - f.angle;
   turn = Math.atan2(Math.sin(turn), Math.cos(turn));

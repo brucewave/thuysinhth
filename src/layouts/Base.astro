@@ -16,7 +16,7 @@ const fullTitle = title ? `${title} | ${site.name}` : `${site.name} | ${site.tag
 
 const catalog = { products: {}, search: [] };
 for (const p of products) {
-  catalog.search.push({ title: p.name, url: `/san-pham/${p.slug}/`, type: p.soldOut ? 'Sản phẩm · Hết hàng' : 'Sản phẩm' });
+  catalog.search.push({ title: p.name, url: `/san-pham/${p.slug}/`, type: p.soldOut ? 'Sản phẩm · Sắp ra mắt' : 'Sản phẩm' });
   if (p.soldOut) continue;
   const img = await getImage({ src: p.images[0]?.src ?? mark, width: 144, format: 'webp' });
   catalog.products[p.slug] = { name: p.name, price: p.price, size: p.size, image: img.src };
