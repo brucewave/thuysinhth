@@ -1,8 +1,10 @@
 ---
 import Base from '../layouts/Base.astro';
+import Crumbs from '../components/Crumbs.astro';
 import { site } from '../data/site.js';
 ---
-<Base title="Đặt hàng" focus>
+<Base title="Đặt hàng">
+  <Crumbs items={[{ name: 'Đặt hàng' }]} />
   <div class="checkout" data-checkout hidden>
     <form novalidate data-endpoint={site.orderEndpoint} data-zalo={site.zalo}>
       <h1>Đặt hàng</h1>

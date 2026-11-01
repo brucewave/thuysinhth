@@ -459,9 +459,7 @@ a.contact-card:hover { border-color: var(--blue); transform: translateY(-2px); }
 .cart-total { display: flex; justify-content: space-between; margin-bottom: 12px; font-weight: 700; }
 
 /* Thanh toán */
-.focus-page .header-main > :not(.logo), .focus-page .site-nav, .focus-page .footer-wave, .focus-page .site-footer { display: none; }
-.focus-page .header-main { grid-template-columns: auto; padding-block: 8px; }
-.checkout { display: grid; grid-template-columns: minmax(16px, 1fr) minmax(0, 600px) minmax(0, 480px) minmax(16px, 1fr); min-height: calc(100dvh - 72px); }
+.checkout { display: grid; grid-template-columns: minmax(16px, 1fr) minmax(0, 668px) minmax(0, 500px) minmax(16px, 1fr); }
 .checkout form { grid-column: 2; padding: 28px 48px 56px 0; }
 .checkout form h2 { margin: 26px 0 12px; font-size: 1.25rem; }
 .checkout-promise { display: flex; flex-wrap: wrap; gap: 6px 22px; margin: 10px 0 0; padding: 0; color: var(--muted); list-style: none; }
@@ -492,7 +490,6 @@ a.contact-card:hover { border-color: var(--blue); transform: translateY(-2px); }
 .checkout-totals .grand { margin-top: 6px; font-size: 1.15rem; font-weight: 800; }
 .checkout-state > [data-empty], .checkout-state > [data-done] { margin-block: 28px; }
 @media (max-width: 900px) {
-  .checkout { min-height: 0; }
   .checkout form, .checkout-side { grid-column: 1; padding: 20px 16px; }
   .checkout-side { order: -1; border-left: 0; border-bottom: 1px solid var(--line); }
   .checkout-summary { position: static; max-width: none; }

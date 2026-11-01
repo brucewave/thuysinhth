@@ -11,7 +11,7 @@ import { site } from '../data/site.js';
 import { categories, products } from '../data/products.js';
 import { posts } from '../data/posts.js';
 
-const { title, description = site.description, image, focus = false } = Astro.props;
+const { title, description = site.description, image } = Astro.props;
 const fullTitle = title ? `${title} | ${site.name}` : `${site.name} | ${site.tagline}`;
 
 const catalog = { products: {}, search: [] };
@@ -99,7 +99,7 @@ const hasContact =site.phone || site.zalo || site.email || site.address || site.
     <link rel="icon" href="/favicon.png" type="image/png" />
     <slot name="head" />
   </head>
-  <body class:list={{ 'focus-page': focus }}>
+  <body>
     <a class="skip" href="#main">Bỏ qua đến nội dung</a>
     <header class="site-header">
       <div class="wrap header-main">
