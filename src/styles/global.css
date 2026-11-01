@@ -476,7 +476,19 @@ a.contact-card:hover { border-color: var(--blue); transform: translateY(-2px); }
 .footer-grid ul { margin: 0; padding: 0; list-style: none; }
 .footer-grid a { display: inline-block; padding: 4px 0; color: #fff; text-decoration: none; }
 .footer-grid a:hover { text-decoration: underline; }
-.footer-grid p { margin: 8px 0 0; }
+.footer-grid p { margin: 12px 0 0; }
+.footer-grid .logo { display: inline-flex; padding: 0; }
+.footer-grid .logo:hover { text-decoration: none; }
+.footer-grid li > a:not(:has(.footer-icon)) { transition: transform .15s, color .15s; }
+.footer-grid li > a:not(:has(.footer-icon)):hover { transform: translateX(4px); color: var(--yellow); text-decoration: none; }
+.footer-badges { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px !important; }
+.footer-badges li { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border: 1px solid rgba(255, 255, 255, .3); border-radius: 999px; font-size: .88rem; }
+.footer-badges svg { color: var(--yellow); flex: none; }
+.footer-contacts li + li { margin-top: 6px; }
+.footer-contacts a, .footer-contacts li > span { display: flex; align-items: center; gap: 10px; padding: 2px 0; }
+.footer-icon { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: rgba(255, 255, 255, .12); color: var(--yellow); flex: none; transition: background-color .15s, color .15s; }
+.footer-contacts a:hover { text-decoration: none; }
+.footer-contacts a:hover .footer-icon { background: var(--yellow); color: var(--blue-dark); }
 .copyright { margin-top: 28px; padding-top: 14px; border-top: 1px solid rgba(255, 255, 255, .25); font-size: .9rem; }
 
 @media (max-width: 900px) {
@@ -515,7 +527,7 @@ a.contact-card:hover { border-color: var(--blue); transform: translateY(-2px); }
   .post-hero-img { min-height: 220px; order: -1; }
   .post-layout { gap: 32px; }
   .footer-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .footer-brand { grid-column: 1 / -1; }
+  .footer-brand, .footer-grid > div:last-child { grid-column: 1 / -1; }
   .pdp { gap: 20px; }
 }
 
