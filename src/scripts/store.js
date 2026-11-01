@@ -118,12 +118,19 @@ search.form.addEventListener('submit', (e) => {
 
 document.addEventListener('click', (e) => {
   if (!e.target.closest('.search')) results.hidden = true;
-  const shop = document.querySelector('.site-nav details');
-  if (!e.target.closest('.site-nav details')) shop.open = false;
 });
 
 document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') results.hidden = true;
+  if (e.key !== 'Escape') return;
+  results.hidden = true;
+  if (document.activeElement.closest('.has-mega')) document.activeElement.blur();
+});
+
+// Trên điện thoại, chạm "Cửa hàng" mở danh sách thay vì chuyển trang.
+document.querySelector('.mega-toggle').addEventListener('click', (e) => {
+  if (!matchMedia('(max-width: 900px)').matches) return;
+  e.preventDefault();
+  e.currentTarget.parentElement.classList.toggle('open');
 });
 
 const menu = document.querySelector('.menu-btn');

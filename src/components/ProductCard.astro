@@ -22,9 +22,10 @@ const photo = p.images?.[0];
       {p.price && <span class="price">{money(p.price)}</span>}
     </div>
   </a>
-  {p.soldOut ? (
-    <button class="btn" type="button" disabled>Hết hàng</button>
-  ) : (
-    <button class="btn" type="button" data-add={p.slug}>Thêm vào giỏ</button>
+  {!p.soldOut && (
+    <button class="add-btn" type="button" data-add={p.slug} aria-label={`Thêm ${p.name} vào giỏ`}>
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 8V6.5a4 4 0 0 1 8 0V8"/><path d="M12 21H6.5a2 2 0 0 1-2-2.2L5.4 8h13.2l.5 5.5"/><path d="M18 16v6M15 19h6"/></svg>
+      <span>Thêm vào giỏ</span>
+    </button>
   )}
 </article>

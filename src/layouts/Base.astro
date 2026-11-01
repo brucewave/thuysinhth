@@ -2,6 +2,11 @@
 import { Image, getImage } from 'astro:assets';
 import '../styles/global.css';
 import mark from '../assets/brand/mark.png';
+import menuNuoc from '../assets/khu-clo/rot.png';
+import menuThucAn from '../assets/thuc-an/khoi-gel.png';
+import menuViSinh from '../assets/vi-sinh/ngon-tay.png';
+import menuLoc from '../assets/blog/be-ca-1.jpg';
+import menuBlog from '../assets/blog/be-ca-2.jpg';
 import { site } from '../data/site.js';
 import { categories, products } from '../data/products.js';
 import { posts } from '../data/posts.js';
@@ -18,7 +23,49 @@ for (const p of products) {
 }
 for (const p of posts) catalog.search.push({ title: p.title, url: `/blog/${p.slug}/`, type: 'Bài viết' });
 
-const hasContact = site.phone || site.zalo || site.email || site.address || site.facebook || site.tiktok;
+const megaMenu = [
+  {
+    title: 'XỬ LÝ NƯỚC',
+    url: '/danh-muc/xu-ly-nuoc/',
+    image: menuNuoc,
+    links: [{ name: 'Dung dịch khử Clo', url: '/san-pham/dung-dich-khu-clo/' }],
+  },
+  {
+    title: 'THỨC ĂN & THUỐC',
+    url: '/danh-muc/thuc-an/',
+    image: menuThucAn,
+    links: [
+      { name: 'Thức ăn cho cá', url: '/danh-muc/thuc-an/' },
+      { name: 'Thuốc cho cá', url: '/danh-muc/thuoc-cho-ca/' },
+    ],
+  },
+  {
+    title: 'VI SINH',
+    url: '/danh-muc/vi-sinh/',
+    image: menuViSinh,
+    links: [{ name: 'Bột vi sinh bào tử', url: '/san-pham/bot-vi-sinh-bao-tu/' }],
+  },
+  {
+    title: 'LỌC & PHÂN NƯỚC',
+    url: '/danh-muc/loc-oxy/',
+    image: menuLoc,
+    links: [
+      { name: 'Lọc & Oxy', url: '/danh-muc/loc-oxy/' },
+      { name: 'Phân nước', url: '/danh-muc/phan-nuoc/' },
+    ],
+  },
+  {
+    title: 'KIẾN THỨC',
+    url: '/blog/',
+    image: menuBlog,
+    links: [
+      { name: 'Nuôi cá quá dễ', url: `/blog/${posts[0].slug}/` },
+      { name: 'Clo, cho ăn và Cycle', url: `/blog/${posts[1].slug}/` },
+    ],
+  },
+];
+
+const hasContact =site.phone || site.zalo || site.email || site.address || site.facebook || site.tiktok;
 ---
 <!doctype html>
 <html lang="vi">
@@ -66,14 +113,21 @@ const hasContact = site.phone || site.zalo || site.email || site.address || site
       </div>
       <nav class="site-nav" aria-label="Chính">
         <ul class="wrap">
-          <li>
-            <details>
-              <summary>Cửa hàng</summary>
-              <div class="dropdown">
-                <a href="/san-pham/">Tất cả sản phẩm</a>
-                {categories.map((c) => <a href={`/danh-muc/${c.slug}/`}>{c.name}</a>)}
+          <li class="has-mega">
+            <a class="mega-toggle" href="/san-pham/" aria-haspopup="true">Cửa hàng</a>
+            <div class="mega">
+              <div class="wrap mega-grid">
+                {megaMenu.map((col) => (
+                  <div class="mega-col">
+                    <a class="mega-photo" href={col.url} tabindex="-1" aria-hidden="true">
+                      <Image src={col.image} alt="" width={420} format="webp" />
+                    </a>
+                    <a class="mega-pill" href={col.url}>{col.title}</a>
+                    <ul>{col.links.map((l) => <li><a href={l.url}>{l.name}</a></li>)}</ul>
+                  </div>
+                ))}
               </div>
-            </details>
+            </div>
           </li>
           <li><a href="/danh-muc/thuc-an/">Thức ăn</a></li>
           <li><a href="/danh-muc/xu-ly-nuoc/">Xử lý nước</a></li>
