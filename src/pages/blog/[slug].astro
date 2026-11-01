@@ -2,7 +2,11 @@
 import { Image, getImage } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import Crumbs from '../../components/Crumbs.astro';
+import PostCard from '../../components/PostCard.astro';
+import Rating from '../../components/Rating.astro';
 import { posts } from '../../data/posts.js';
+import { products, money } from '../../data/products.js';
+import { site } from '../../data/site.js';
 
 export function getStaticPaths() {
   return posts.map((post) => ({ params: { slug: post.slug }, props: { post } }));
@@ -11,18 +15,107 @@ export function getStaticPaths() {
 const { post } = Astro.props;
 const next = posts.find((p) => p.slug !== post.slug);
 const og = await getImage({ src: post.image.src, width: 1000, format: 'jpg' });
+const featured = products.filter((p) => !p.soldOut && p.images.length).slice(0, 3);
+const headings = post.body.filter((b) => b.h).map((b) => b.h);
+const headingId = (h) => `muc-${headings.indexOf(h) + 1}`;
+const words = JSON.stringify(post.body).split(/\s+/).length;
+const minutes = Math.max(1, Math.round(words / 200));
 ---
 <Base title={post.title} description={post.excerpt} image={og.src}>
   <Crumbs items={[{ name: 'Blog', url: '/blog/' }, { name: post.title }]} />
-  <article class="article wrap">
-    <h1 class="page-title">{post.title}</h1>
-    <Image src={post.image.src} alt={post.image.alt} widths={[480, 760]} sizes="(max-width: 760px) 100vw, 760px" format="webp" loading="eager" />
-    {post.body.map((b) => {
-      if (typeof b === 'string') return <p>{b}</p>;
-      if (b.h) return <h2>{b.h}</h2>;
-      if (b.caps) return <p class="caps">{b.caps}</p>;
-      return <ol>{b.ol.map((li) => <li>{li}</li>)}</ol>;
-    })}
-    <p><a class="link-more" href={`/blog/${next.slug}/`}>Đọc tiếp: {next.title}</a></p>
-  </article>
+
+  <header class="post-hero wrap">
+    <div class="post-hero-box">
+      <div class="post-hero-text">
+        <span class="eyebrow">Blog về bể cá · {minutes} phút đọc</span>
+        <h1>{post.title}</h1>
+        <p>{post.excerpt}</p>
+      </div>
+      <div class="post-hero-img">
+        <Image src={post.image.src} alt={post.image.alt} widths={[480, 760]} sizes="(max-width: 900px) 100vw, 560px" format="webp" loading="eager" />
+      </div>
+    </div>
+  </header>
+
+  <div class="post-layout wrap">
+    <article class="article">
+      {post.body.map((b) => {
+        if (typeof b === 'string') return <p>{b}</p>;
+        if (b.h) return <h2 id={headingId(b.h)}>{b.h}</h2>;
+        if (b.caps) return <p class="caps">{b.caps}</p>;
+        return <ol>{b.ol.map((li) => <li>{li}</li>)}</ol>;
+      })}
+      <section class="post-next" aria-labelledby="doc-tiep">
+        <h2 id="doc-tiep">Đọc tiếp</h2>
+        <PostCard post={next} />
+      </section>
+    </article>
+
+    <aside class="post-side" aria-label="Thông tin thêm">
+      <section>
+        <label class="side-title" for="tim-bai">Tìm bài viết</label>
+        <input class="side-search" id="tim-bai" type="search" placeholder="Nhập từ khóa" autocomplete="off" data-post-search />
+      </section>
+
+      {headings.length > 1 && (
+        <section>
+          <h2 class="side-title">Trong bài này</h2>
+          <ul class="side-links">{headings.map((h) => <li><a href={`#${headingId(h)}`}>{h}</a></li>)}</ul>
+        </section>
+      )}
+
+      <section>
+        <h2 class="side-title">Bài viết mới</h2>
+        <ul class="side-links" data-post-list>
+          {posts.map((p) => (
+            <li><a href={`/blog/${p.slug}/`} aria-current={p.slug === post.slug ? 'page' : undefined}>{p.title}</a></li>
+          ))}
+        </ul>
+        <p class="side-empty" data-post-empty hidden>Không tìm thấy bài viết.</p>
+      </section>
+
+      <section class="side-follow">
+        <h2 class="side-title">Theo dõi {site.name}</h2>
+        <p>Mẹo nuôi cá ngắn gọn mỗi tuần trên TikTok. Cần hỏi gì thì nhắn Zalo.</p>
+        <div class="side-actions">
+          <a class="btn accent" href={site.tiktok} target="_blank" rel="noopener">TikTok</a>
+          <a class="btn ghost-light" href={`https://zalo.me/${site.zalo}`} target="_blank" rel="noopener">Zalo</a>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="side-title">Sản phẩm nổi bật</h2>
+        {featured.map((p) => (
+          <article class="side-product">
+            <a href={`/san-pham/${p.slug}/`} tabindex="-1" aria-hidden="true">
+              <Image src={p.images[0].src} alt="" width={200} format="webp" />
+            </a>
+            <div>
+              <a class="side-product-name" href={`/san-pham/${p.slug}/`}>{p.name}</a>
+              <div class="rating"><Rating product={p} /></div>
+              <span class="price">{money(p.price)}</span>
+              <button class="btn full" type="button" data-add={p.slug} aria-label={`Thêm ${p.name} vào giỏ`}>Thêm vào giỏ</button>
+            </div>
+          </article>
+        ))}
+      </section>
+    </aside>
+  </div>
 </Base>
+
+<script>
+  const input = document.querySelector('[data-post-search]');
+  const items = [...document.querySelectorAll('[data-post-list] li')];
+  const empty = document.querySelector('[data-post-empty]');
+  const norm = (s) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/đ/gi, 'd').toLowerCase();
+
+  input.addEventListener('input', () => {
+    const q = norm(input.value.trim());
+    let shown = 0;
+    items.forEach((li) => {
+      li.hidden = !norm(li.textContent).includes(q);
+      if (!li.hidden) shown++;
+    });
+    empty.hidden = shown > 0;
+  });
+</script>

@@ -4,24 +4,87 @@ import Base from '../layouts/Base.astro';
 import ProductCard from '../components/ProductCard.astro';
 import PostCard from '../components/PostCard.astro';
 import hero from '../assets/khu-clo/ho-ca.png';
+import heroGel from '../assets/thuc-an/khoi-gel.png';
+import heroViSinh from '../assets/vi-sinh/ho-ca.png';
+import heroGuppy from '../assets/blog/guppy.jpg';
 import { products, money } from '../data/products.js';
 import { posts } from '../data/posts.js';
+import { site } from '../data/site.js';
 
-const clo = products[0];
+const [clo, gel, viSinh] = products;
+const guide = `/blog/${posts[0].slug}/`;
+const slides = [
+  {
+    eyebrow: 'Hóa chất duy nhất anh em cần mua',
+    title: 'Khử Clo & Chloramin trong 2 phút',
+    text: `Tinh khiết 100%, an toàn tuyệt đối cho cá, tép và hệ vi sinh. Chai 230 ml, ${money(clo.price)}.`,
+    url: `/san-pham/${clo.slug}/`,
+    cta: 'Xem sản phẩm',
+    image: hero,
+    alt: 'Chai khử Clo Thủy Sinh TH đặt cạnh hồ thủy sinh',
+  },
+  {
+    eyebrow: gel.headline,
+    title: 'Thức ăn Gel TH đạm trên 50%',
+    text: `Ít tan trong nước, cá con và tép đều ăn được. Gói 60 g, ${money(gel.price)}.`,
+    url: `/san-pham/${gel.slug}/`,
+    cta: 'Xem sản phẩm',
+    image: heroGel,
+    alt: 'Khối thức ăn gel nằm trên nền sỏi trong hồ',
+  },
+  {
+    eyebrow: 'Khởi tạo màng sinh học lọc nước',
+    title: 'Bột vi sinh dạng bào tử',
+    text: `Chứa khối lượng vi sinh có lợi cực kì lớn, đa dạng chủng loại. Hũ 30 g, ${money(viSinh.price)}.`,
+    url: `/san-pham/${viSinh.slug}/`,
+    cta: 'Xem sản phẩm',
+    image: heroViSinh,
+    alt: 'Hũ vi sinh đặt cạnh hồ thủy sinh',
+  },
+  {
+    eyebrow: 'Mới nuôi cá?',
+    title: 'Nuôi cá cảnh quá dễ!',
+    text: '15 điều cần làm để có một bể cá đơn giản và đúng khoa học ngay từ đầu.',
+    url: guide,
+    cta: 'Đọc hướng dẫn',
+    image: heroGuppy,
+    alt: 'Cá bảy màu bơi trong hồ thủy sinh',
+  },
+];
+const tiktokUser = site.tiktok.split('@')[1];
 ---
 <Base>
-  <section class="hero wrap">
-    <div class="hero-box">
-      <div class="hero-text">
-        <span class="eyebrow">Hóa chất duy nhất anh em cần mua</span>
-        <h1>Khử Clo & Chloramin trong 2 phút</h1>
-        <p>Tinh khiết 100%, an toàn tuyệt đối cho cá, tép và hệ vi sinh. Chai 230 ml, {money(clo.price)}.</p>
-        <div class="hero-actions">
-          <a class="btn accent" href={`/san-pham/${clo.slug}/`}>Xem sản phẩm</a>
-          <a class="btn ghost-light" href={`/blog/${posts[0].slug}/`}>Bắt đầu nuôi cá</a>
-        </div>
+  <section class="hero wrap" aria-roledescription="carousel" aria-label="Sản phẩm nổi bật">
+    <div class="hero-slider">
+      <div class="hero-track">
+        {slides.map((s, i) => {
+          const Title = i ? 'h2' : 'h1';
+          return (
+            <div class="hero-box" aria-roledescription="slide" aria-label={`${i + 1} trên ${slides.length}`}>
+              <div class="hero-text">
+                <span class="eyebrow">{s.eyebrow}</span>
+                <Title>{s.title}</Title>
+                <p>{s.text}</p>
+                <div class="hero-actions">
+                  <a class="btn accent" href={s.url}>{s.cta}</a>
+                  {i < slides.length - 1 && <a class="btn ghost-light" href={guide}>Bắt đầu nuôi cá</a>}
+                </div>
+              </div>
+              <Image class="hero-img" src={s.image} alt={s.alt} widths={[480, 640, 900]} sizes="(max-width: 900px) 100vw, 560px" format="webp" loading={i ? 'lazy' : 'eager'} />
+            </div>
+          );
+        })}
       </div>
-      <Image class="hero-img" src={hero} alt="Chai khử Clo Thủy Sinh TH đặt cạnh hồ thủy sinh" widths={[480, 640, 900]} sizes="(max-width: 900px) 100vw, 560px" format="webp" loading="eager" />
+      <canvas class="tank" aria-hidden="true"></canvas>
+      <button class="hero-nav prev" type="button" data-hero="-1" aria-label="Slide trước">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m15 5-7 7 7 7"/></svg>
+      </button>
+      <button class="hero-nav next" type="button" data-hero="1" aria-label="Slide sau">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg>
+      </button>
+    </div>
+    <div class="hero-dots">
+      {slides.map((_, i) => <button type="button" data-dot={i} aria-label={`Đến slide ${i + 1}`} aria-current={i === 0 ? 'true' : 'false'}></button>)}
     </div>
   </section>
 
@@ -39,6 +102,21 @@ const clo = products[0];
     </div>
   </section>
 
+  <section class="wrap tiktok" aria-labelledby="tt">
+    <div class="section-head">
+      <div>
+        <h2 id="tt">Video trên TikTok</h2>
+        <small class="tiktok-stats">{site.tiktokStats}</small>
+      </div>
+      <a class="link-more" href={site.tiktok} target="_blank" rel="noopener">@{tiktokUser}</a>
+    </div>
+    <div class="tiktok-grid">
+      {site.tiktokVideos.map((url, i) => (
+        <iframe src={`https://www.tiktok.com/player/v1/${url.split('/').pop()}?description=1&music_info=0`} title={`Video TikTok ${i + 1} của ${site.name}`} loading="lazy" allow="encrypted-media; fullscreen; picture-in-picture" allowfullscreen></iframe>
+      ))}
+    </div>
+  </section>
+
   <section class="wrap" aria-labelledby="bv">
     <div class="section-head">
       <h2 id="bv">Blog về bể cá</h2>
@@ -49,3 +127,42 @@ const clo = products[0];
     </div>
   </section>
 </Base>
+
+<script>
+  const slider = document.querySelector('.hero-slider');
+  const track = slider.querySelector('.hero-track');
+  const dots = document.querySelectorAll('[data-dot]');
+  const count = dots.length;
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let current = 0;
+
+  const goTo = (i) => {
+    track.scrollTo({ left: ((i + count) % count) * track.clientWidth, behavior: reduced ? 'auto' : 'smooth' });
+  };
+
+  track.addEventListener('scroll', () => {
+    const next = Math.round(track.scrollLeft / track.clientWidth);
+    if (next === current) return;
+    current = next;
+    dots.forEach((d, i) => d.setAttribute('aria-current', i === current));
+    document.dispatchEvent(new CustomEvent('hero:slide', { detail: track.children[current] }));
+  }, { passive: true });
+
+  dots.forEach((d, i) => d.addEventListener('click', () => goTo(i)));
+  document.querySelectorAll('[data-hero]').forEach((b) =>
+    b.addEventListener('click', () => goTo(current + Number(b.dataset.hero))),
+  );
+
+  // Tự chuyển mỗi 5 giây, dừng khi khách đang rê chuột hoặc thao tác trong banner.
+  let paused = false;
+  const hero = document.querySelector('.hero');
+  hero.addEventListener('mouseenter', () => (paused = true));
+  hero.addEventListener('mouseleave', () => (paused = false));
+  hero.addEventListener('focusin', () => (paused = true));
+  hero.addEventListener('focusout', () => (paused = false));
+  if (!reduced) {
+    setInterval(() => {
+      if (!paused && !document.hidden) goTo(current + 1);
+    }, 5000);
+  }
+</script>

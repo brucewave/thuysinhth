@@ -43,6 +43,43 @@ function setQty(slug, qty) {
   save();
 }
 
+// Tài khoản không bắt buộc: chỉ nằm trên trình duyệt của khách, không gửi đi đâu.
+const PROFILE_KEY = 'thuysinhth-profile';
+const ORDERS_KEY = 'thuysinhth-orders';
+
+function read(key) {
+  try {
+    return JSON.parse(localStorage.getItem(key));
+  } catch {
+    return null;
+  }
+}
+
+function write(key, value) {
+  try {
+    if (value === null) localStorage.removeItem(key);
+    else localStorage.setItem(key, JSON.stringify(value));
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export const loadProfile = () => read(PROFILE_KEY);
+export const saveProfile = (profile) => write(PROFILE_KEY, profile);
+export const loadOrders = () => read(ORDERS_KEY) || [];
+export const productImage = (slug) => catalog.products[slug]?.image;
+
+export function addOrder(lines, total) {
+  const items = lines.map(({ slug, name, qty }) => ({ slug, name, qty }));
+  write(ORDERS_KEY, [{ date: new Date().toISOString(), items, total }, ...loadOrders()].slice(0, 20));
+}
+
+export function clearAccount() {
+  write(PROFILE_KEY, null);
+  write(ORDERS_KEY, null);
+}
+
 const dialog = document.getElementById('cart');
 
 function render() {

@@ -1,0 +1,114 @@
+---
+import Base from '../layouts/Base.astro';
+import Crumbs from '../components/Crumbs.astro';
+---
+<Base title="Tài khoản" description="Lưu thông tin nhận hàng để đặt hàng nhanh hơn, không bắt buộc.">
+  <Crumbs items={[{ name: 'Tài khoản' }]} />
+  <div class="wrap">
+    <h1 class="page-title">Tài khoản</h1>
+    <p class="note account-note">Không bắt buộc: bạn vẫn đặt hàng bình thường mà không cần mục này. Thông tin chỉ lưu trên trình duyệt của máy này, không gửi về cửa hàng và không có mật khẩu, nên đừng lưu trên máy dùng chung.</p>
+
+    <div class="checkout account">
+      <form novalidate data-profile>
+        <h2>Thông tin nhận hàng</h2>
+        <label class="field">
+          <span>Họ và tên</span>
+          <input name="name" autocomplete="name" required />
+          <em hidden>Vui lòng nhập họ và tên.</em>
+        </label>
+        <label class="field">
+          <span>Số điện thoại</span>
+          <input name="phone" type="tel" autocomplete="tel" inputmode="tel" required pattern="(\+84|0)[0-9 .]{8,12}" />
+          <em hidden>Vui lòng nhập số điện thoại hợp lệ, ví dụ 0901234567.</em>
+        </label>
+        <label class="field">
+          <span>Địa chỉ nhận hàng</span>
+          <textarea name="address" rows="3" autocomplete="street-address" required></textarea>
+          <em hidden>Vui lòng nhập địa chỉ nhận hàng.</em>
+        </label>
+        <div class="stack">
+          <button class="btn" type="submit">Lưu thông tin</button>
+          <button class="btn alt" type="button" data-clear hidden>Xóa khỏi máy này</button>
+        </div>
+        <p role="status" data-status></p>
+      </form>
+
+      <aside class="summary" aria-label="Đơn đã tạo">
+        <h2>Đơn đã tạo trên máy này</h2>
+        <ul class="orders" data-orders></ul>
+        <p data-no-orders>Chưa có đơn nào. <a href="/san-pham/">Xem sản phẩm</a></p>
+      </aside>
+    </div>
+  </div>
+</Base>
+
+<script>
+  import { clearAccount, loadOrders, loadProfile, productImage, saveProfile } from '../scripts/store.js';
+
+  const form = document.querySelector('[data-profile]');
+  const clear = document.querySelector('[data-clear]');
+  const status = document.querySelector('[data-status]');
+  const money = (n) => n.toLocaleString('vi-VN') + ' VNĐ';
+  const fields = ['name', 'phone', 'address'];
+
+  function render() {
+    const profile = loadProfile();
+    fields.forEach((key) => (form.elements[key].value = profile?.[key] ?? ''));
+    clear.hidden = !profile;
+
+    const orders = loadOrders();
+    document.querySelector('[data-no-orders]').hidden = orders.length > 0;
+    document.querySelector('[data-orders]').replaceChildren(
+      ...orders.map((o) => {
+        const li = document.createElement('li');
+        const head = document.createElement('div');
+        head.className = 'order-head';
+        head.innerHTML = '<span></span><strong></strong>';
+        head.children[0].textContent = new Date(o.date).toLocaleDateString('vi-VN');
+        head.children[1].textContent = money(o.total);
+        const items = document.createElement('div');
+        items.className = 'order-items';
+        for (const item of o.items) {
+          const row = document.createElement('a');
+          row.href = `/san-pham/${item.slug}/`;
+          row.textContent = `${item.name} × ${item.qty}`;
+          const src = productImage(item.slug);
+          if (src) {
+            const img = new Image(40, 40);
+            img.src = src;
+            img.alt = '';
+            row.prepend(img);
+          }
+          items.append(row);
+        }
+        li.append(head, items);
+        return li;
+      }),
+    );
+  }
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    let firstBad;
+    form.querySelectorAll('[required]').forEach((f) => {
+      const ok = f.value.trim() !== '' && f.checkValidity();
+      f.closest('.field').querySelector('em').hidden = ok;
+      f.setAttribute('aria-invalid', !ok);
+      if (!ok && !firstBad) firstBad = f;
+    });
+    if (firstBad) return firstBad.focus();
+
+    const { name, phone, address } = Object.fromEntries(new FormData(form));
+    const saved = saveProfile({ name, phone, address });
+    status.textContent = saved ? 'Đã lưu. Lần sau đặt hàng, thông tin sẽ tự điền.' : 'Trình duyệt đang chặn lưu dữ liệu nên chưa lưu được.';
+    render();
+  });
+
+  clear.addEventListener('click', () => {
+    clearAccount();
+    status.textContent = 'Đã xóa thông tin và lịch sử đơn khỏi máy này.';
+    render();
+  });
+
+  render();
+</script>

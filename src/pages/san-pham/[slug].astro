@@ -3,9 +3,11 @@ import { Image, getImage } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import Crumbs from '../../components/Crumbs.astro';
 import ProductCard from '../../components/ProductCard.astro';
+import Rating from '../../components/Rating.astro';
 import mark from '../../assets/brand/mark.png';
 import { site } from '../../data/site.js';
 import { categories, products, money } from '../../data/products.js';
+import { ratingOf } from '../../data/reviews.js';
 
 export function getStaticPaths() {
   return products.map((p) => ({ params: { slug: p.slug }, props: { product: p } }));
@@ -14,7 +16,8 @@ export function getStaticPaths() {
 const { product: p } = Astro.props;
 const category = categories.find((c) => c.slug === p.category);
 const images = p.images ?? [];
-const related = products.filter((x) => x.slug !== p.slug && !x.soldOut).slice(0, 4);
+const related = products.filter((x) => x.slug !== p.slug).slice(0, 4);
+const review = ratingOf(p);
 const ogImage = images[0] ? (await getImage({ src: images[0].src, width: 1000, format: 'jpg' })).src : undefined;
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -31,6 +34,9 @@ const jsonLd = {
     },
   }),
 };
+const zaloUrl = `https://zalo.me/${site.zalo}`;
+const bagIcon =
+  '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 8V6.5a4 4 0 0 1 8 0V8"/><path d="M12 21H6.5a2 2 0 0 1-2-2.2L5.4 8h13.2l.5 5.5"/><path d="M18 16v6M15 19h6"/></svg>';
 ---
 <Base title={p.name} description={p.intro?.[0].slice(0, 155)} image={ogImage}>
   <script slot="head" type="application/ld+json" set:html={JSON.stringify(jsonLd).replace(/</g, '\\u003c')}></script>
@@ -43,7 +49,23 @@ const jsonLd = {
           {images.length ? images.map((img, i) => (
             <Image data-slide={i} src={img.src} alt={img.alt} widths={[420, 640, 900]} sizes="(max-width: 900px) 100vw, 580px" format="webp" loading={i ? 'lazy' : 'eager'} hidden={i > 0} />
           )) : <Image class="placeholder" src={mark} alt="" width={320} format="webp" />}
+          {images.length > 1 && (
+            <>
+              <button class="gallery-nav prev" type="button" data-gallery="-1" aria-label="Ảnh trước">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m15 5-7 7 7 7"/></svg>
+              </button>
+              <button class="gallery-nav next" type="button" data-gallery="1" aria-label="Ảnh sau">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg>
+              </button>
+            </>
+          )}
         </div>
+        {p.tempPhoto && (
+          <p class="temp-note">
+            Ảnh minh họa, không phải sản phẩm thật.
+            {p.tempPhoto.url && <> Nguồn: <a href={p.tempPhoto.url} target="_blank" rel="noopener">{p.tempPhoto.text}</a>.</>}
+          </p>
+        )}
         {images.length > 1 && (
           <div class="thumbs">
             {images.map((img, i) => (
@@ -56,61 +78,123 @@ const jsonLd = {
       </div>
 
       <div class="pdp-info">
-        <h1>{p.name}</h1>
+        <div class="pdp-title">
+          <h1>{p.name}</h1>
+          {!p.soldOut && <a class="rating" href="#danh-gia"><Rating product={p} /></a>}
+        </div>
         {p.soldOut ? (
           <p class="note">Sản phẩm này hiện đã hết hàng.</p>
         ) : (
           <>
             <p class="price pdp-price">{money(p.price)}</p>
-            <p class="variant">{p.size}</p>
-            <div class="buy">
+            <p class="variant">{p.size}<span>{money(p.price)}</span></p>
+            <div class="buy" data-buy>
               <div class="qty">
                 <button type="button" data-pdp-step="-1" aria-label="Giảm số lượng">−</button>
                 <input data-pdp-qty value="1" readonly aria-label="Số lượng" />
                 <button type="button" data-pdp-step="1" aria-label="Tăng số lượng">+</button>
               </div>
-              <button class="btn" type="button" data-add={p.slug} data-pdp="1">Thêm vào giỏ</button>
+              <button class="btn shine" type="button" data-add={p.slug} data-pdp="1"><Fragment set:html={bagIcon} />Thêm vào giỏ</button>
             </div>
             <ul class="checks">{p.bullets.map((b) => <li>{b}</li>)}</ul>
-            <div class="pdp-text">{p.intro.map((t) => <p>{t}</p>)}</div>
-            {p.specs && (
-              <div class="spec-box">
-                <h3>{p.specsTitle}</h3>
-                <ul>{p.specs.map((s) => <li>{s}</li>)}</ul>
-              </div>
-            )}
+            <p class="pdp-lead">{p.intro[0]}</p>
           </>
         )}
       </div>
     </div>
 
+    {!p.soldOut && (p.intro.length > 1 || p.specs) && (
+      <section class="pdp-more" aria-label="Thông tin chi tiết">
+        <div class="more-body" data-more>
+          {p.intro.slice(1).map((t) => <p>{t}</p>)}
+          {p.specs && (
+            <>
+              <h3>{p.specsTitle}</h3>
+              <ul>{p.specs.map((s) => <li>{s}</li>)}</ul>
+            </>
+          )}
+        </div>
+        <button class="btn accent more-btn" type="button" data-more-btn aria-expanded="false">Xem thêm</button>
+      </section>
+    )}
+
     {p.sections?.length > 0 && (
       <section class="science">
         <h2>{p.sectionsTitle}</h2>
-        <div class="steps">
-          {p.sections.map((s, i) => (
-            <article class="step">
-              <div class="step-no" aria-hidden="true">{i + 1}</div>
-              <div class={`step-body${s.image ? '' : ' plain'}`}>
-                <div>
-                  <h3>{s.title}</h3>
-                  {s.text.map((t) => <p>{t}</p>)}
-                </div>
-                {s.image && <Image src={s.image.src} alt={s.image.alt} width={400} format="webp" />}
-              </div>
-            </article>
-          ))}
-        </div>
+        {p.sections.map((s, i) => (
+          <article class="step">
+            {s.image && <Image class="step-img" src={s.image.src} alt={s.image.alt} width={560} format="webp" />}
+            <div>
+              <h3><span class="step-no" aria-hidden="true">{i + 1}</span>{s.title}</h3>
+              {s.text.map((t) => <p>{t}</p>)}
+            </div>
+          </article>
+        ))}
       </section>
     )}
 
     {related.length > 0 && (
       <section class="section">
-        <div class="section-head"><h2>Có thể bạn cũng cần</h2></div>
+        <div class="section-head"><h2>Có thể bạn cũng thích</h2></div>
         <div class="grid products">{related.map((r) => <ProductCard product={r} />)}</div>
       </section>
     )}
+
+    {!p.soldOut && (
+      <section class="reviews" id="danh-gia">
+        <h2>Đánh giá của khách hàng</h2>
+        {review.count ? (
+          <p class="review-summary"><strong>{review.rating}</strong> <Rating product={p} stars={review.rating} /> {review.count} đánh giá</p>
+        ) : (
+          <p class="note">Chưa có đánh giá nào. Bạn đã dùng sản phẩm này? Hãy gửi cảm nhận cho {site.name} qua <a href={zaloUrl}>Zalo</a>.</p>
+        )}
+        {review.sample && <p class="note">Đánh giá mẫu, chỉ hiện khi xem trên máy, không có trên bản đưa lên mạng.</p>}
+        {review.list.map((r) => (
+          <article class="review">
+            <Rating product={p} stars={r.stars} />
+            <div class="review-who">
+              <span class="avatar" aria-hidden="true">{r.name[0]}</span>
+              <div>
+                <strong>{r.name}</strong>
+                {r.verified && <span class="verified">Đã mua hàng</span>}
+                <small>{r.place} • {r.date}</small>
+              </div>
+            </div>
+            <p>{r.text}</p>
+            <div class="review-item">
+              <Image src={images[0]?.src ?? mark} alt="" width={96} format="webp" />
+              <small>{p.size}</small>
+            </div>
+          </article>
+        ))}
+      </section>
+    )}
+
+    <section class="faq">
+      <h2>Câu hỏi thường gặp</h2>
+      <details>
+        <summary>Đặt hàng như thế nào?</summary>
+        <p>Thêm sản phẩm vào giỏ, điền thông tin nhận hàng rồi gửi nội dung đơn qua Zalo {site.zalo} để hoàn tất.</p>
+      </details>
+      <details>
+        <summary>Phí giao hàng và thanh toán ra sao?</summary>
+        <p>{site.name} sẽ xác nhận phí giao hàng và cách thanh toán khi liên hệ với bạn về đơn hàng.</p>
+      </details>
+      <details>
+        <summary>Vẫn còn thắc mắc?</summary>
+        <p>Gọi <a href={`tel:${site.phone.replace(/\s/g, '')}`}>{site.phone}</a> hoặc nhắn <a href={zaloUrl}>Zalo</a> cho {site.name}.</p>
+      </details>
+    </section>
   </div>
+
+  {!p.soldOut && (
+    <div class="sticky-buy" data-sticky>
+      <Image src={images[0]?.src ?? mark} alt="" width={112} format="webp" />
+      <div class="sticky-name"><strong>{p.name}</strong><small>{p.size}</small></div>
+      <span class="price">{money(p.price)}</span>
+      <button class="btn shine" style="--shine-end:240px" type="button" data-add={p.slug} data-pdp="1"><Fragment set:html={bagIcon} />Thêm vào giỏ</button>
+    </div>
+  )}
 </Base>
 
 <script>
@@ -120,12 +204,48 @@ const jsonLd = {
       input.value = Math.max(1, Number(input.value) + Number(b.dataset.pdpStep));
     }),
   );
+
   const slides = document.querySelectorAll('[data-slide]');
   const thumbs = document.querySelectorAll('[data-thumb]');
-  thumbs.forEach((t) =>
-    t.addEventListener('click', () => {
-      slides.forEach((s) => (s.hidden = s.dataset.slide !== t.dataset.thumb));
-      thumbs.forEach((x) => x.setAttribute('aria-current', x === t));
-    }),
+  let current = 0;
+  const showSlide = (i) => {
+    current = (i + slides.length) % slides.length;
+    slides.forEach((s, n) => (s.hidden = n !== current));
+    thumbs.forEach((x, n) => x.setAttribute('aria-current', n === current));
+  };
+  thumbs.forEach((t, i) => t.addEventListener('click', () => showSlide(i)));
+  document.querySelectorAll('[data-gallery]').forEach((b) =>
+    b.addEventListener('click', () => showSlide(current + Number(b.dataset.gallery))),
   );
+
+  // Thu gọn phần chi tiết; nội dung ngắn thì không cần nút.
+  const more = document.querySelector('[data-more]');
+  const moreBtn = document.querySelector('[data-more-btn]');
+  if (more) {
+    more.classList.add('collapsed');
+    if (more.scrollHeight <= more.clientHeight + 40) {
+      more.classList.remove('collapsed');
+      moreBtn.hidden = true;
+    }
+    moreBtn.addEventListener('click', () => {
+      const collapsed = more.classList.toggle('collapsed');
+      moreBtn.textContent = collapsed ? 'Xem thêm' : 'Thu gọn';
+      moreBtn.setAttribute('aria-expanded', !collapsed);
+    });
+  }
+
+  // Thanh mua hàng hiện khi nút mua chính đã trôi lên khỏi màn hình và chưa tới chân trang.
+  const sticky = document.querySelector('[data-sticky]');
+  const buy = document.querySelector('[data-buy]');
+  const footer = document.querySelector('.site-footer');
+  if (sticky) {
+    const update = () => {
+      const passedBuy = buy.getBoundingClientRect().bottom < 0;
+      const atFooter = footer.getBoundingClientRect().top < innerHeight;
+      sticky.classList.toggle('show', passedBuy && !atFooter);
+    };
+    addEventListener('scroll', update, { passive: true });
+    addEventListener('resize', update);
+    update();
+  }
 </script>

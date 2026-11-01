@@ -13,6 +13,19 @@ import hoCaVs from '../assets/vi-sinh/ho-ca.png';
 import ngonTay from '../assets/vi-sinh/ngon-tay.png';
 import viSinhNuoc from '../assets/vi-sinh/vi-sinh-nuoc.jpg';
 import biofilm from '../assets/vi-sinh/biofilm.png';
+import beCa from '../assets/blog/be-ca-1.jpg';
+import vienThucAn from '../assets/tam/vien-thuc-an.jpg';
+import maySui from '../assets/tam/may-sui.png';
+
+// Ảnh tạm, không phải sản phẩm thật. Có ảnh thật thì thay vào images và bỏ tempPhoto.
+const pelletCredit = {
+  text: 'USFWS Mountain-Prairie, CC BY 2.0, đã cắt ảnh',
+  url: 'https://commons.wikimedia.org/wiki/File:Fish_Food_pellets.jpg',
+};
+const pumpCredit = {
+  text: 'Corydoras-adolfoi, CC BY-SA 4.0, đã tách nền và làm mờ tên hãng',
+  url: 'https://commons.wikimedia.org/wiki/File:Aquarium-air-pump.jpg',
+};
 
 export const categories = [
   { slug: 'xu-ly-nuoc', name: 'Xử lý nước' },
@@ -23,6 +36,7 @@ export const categories = [
   { slug: 'loc-oxy', name: 'Lọc & Oxy' },
 ];
 
+// Khi có đánh giá thật của khách, thêm vào sản phẩm: rating: 4.8, reviews: 12
 export const products = [
   {
     slug: 'dung-dich-khu-clo',
@@ -58,14 +72,17 @@ export const products = [
     sections: [
       {
         title: 'Bản chất phản ứng',
+        image: { src: rot, alt: 'Rót dung dịch khử Clo ra nắp đong' },
         text: ['Clo và Chloramin là các chất oxy hóa cực mạnh. Cách duy nhất để vô hiệu hóa chúng là dùng phản ứng Oxy hóa - Khử. Hợp chất chứa gốc lưu huỳnh dạng khử bẻ gãy liên kết Clo ngay tức thì, biến Clo độc hại thành muối ăn vô hại và một lượng rất nhỏ ion sunfat.'],
       },
       {
         title: 'Chiêu trò "Khử Amoniac & Nitrit"',
+        image: { src: hoCaClo, alt: 'Chai khử Clo đặt cạnh hồ cá' },
         text: ['Không có bất kỳ hợp chất khử Clo nào có khả năng "khử" hay "giải độc" Amoniac hoặc Nitrit. Các thử nghiệm đo lường hóa học chuẩn đã chứng minh nồng độ Amoniac độc hại không hề suy giảm sau khi dùng chất khử. Chỉ có hệ vi sinh sống khỏe mạnh trong lọc sinh học mới chuyển hóa được Amoniac thành Nitrat.'],
       },
       {
         title: 'Tác hại của chất phụ gia tạo nhớt',
+        image: { src: chaiHop, alt: 'Chai và hộp dung dịch khử Clo' },
         text: ['Nhiều sản phẩm cho thêm chiết xuất lô hội hoặc polymer nhân tạo để quảng cáo "dưỡng mang, tạo màng bảo vệ". Thực tế, chất này bám vào phiến mang làm giảm khả năng trao đổi oxy của cá và làm giảm oxy hòa tan trong nước. Một dung dịch khử chuẩn phải tinh khiết 100%, không chứa chất keo bết dính.'],
       },
     ],
@@ -105,6 +122,7 @@ export const products = [
     sections: [
       {
         title: 'Bản chất của bệnh tật trên cá không tự nhiên sinh ra',
+        image: { src: caAn, alt: 'Cá gặm khối thức ăn gel dưới đáy hồ' },
         text: [
           '90% các bệnh thường gặp (thối vây, nấm, sình bụng, lở loét) là do vi khuẩn cơ hội có hại (Aeromonas, Pseudomonas, Columnaris) gây ra.',
           'Những vi khuẩn này luôn chực chờ trong nước, nhưng chúng chỉ bùng phát khi gặp môi trường có tỷ lệ tinh bột cao và đạm thấp.',
@@ -121,6 +139,7 @@ export const products = [
       },
       {
         title: 'Cơ chế đảo ngược của thức ăn đạm cao (>50%) & 0% tinh bột độn',
+        image: { src: khoiGel, alt: 'Khối thức ăn gel nằm trên nền sỏi trong hồ' },
         text: [
           'Khi thức ăn có đạm >50% và tinh bột cực thấp (<10%), cá hấp thu 85% – 90% lượng protein sạch. Phân thải ra chỉ là khoáng chất sạch, hoàn toàn "bỏ đói" các vi khuẩn dị dưỡng gây hại.',
           'Vi khuẩn hại không có thức ăn sẽ tự triệt tiêu. Cột nước đạt trạng thái trong vắt: đây là vũ khí phòng bệnh tối thượng, giúp cá khỏe mạnh mà không bao giờ cần đến thuốc.',
@@ -175,7 +194,8 @@ export const products = [
     price: 95000,
     size: '30 g',
     headline: 'Đưa thẳng hoạt chất vào ruột cá',
-    images: [],
+    images: [{ src: vienThucAn, alt: 'Viên thức ăn cho cá, ảnh minh họa' }],
+    tempPhoto: pelletCredit,
     bullets: [
       'Điều trị các loại ký sinh trùng đường ruột',
       'Không thể thiếu khi nuôi các dòng cá đẻ con và xử lí cá mới',
@@ -194,9 +214,30 @@ export const products = [
     ],
     sections: [],
   },
-  { slug: 'thuc-an-khang-sinh', name: 'Thức ăn kháng sinh', category: 'thuoc-cho-ca', soldOut: true },
-  { slug: 'phan-nuoc', name: 'Phân nước', category: 'phan-nuoc', soldOut: true },
-  { slug: 'loc-bio-sui-oxy-gex-2000', name: 'Lọc Bio, Sủi Oxy Gex 2000 1 vòi', category: 'loc-oxy', soldOut: true },
+  {
+    slug: 'thuc-an-khang-sinh',
+    name: 'Thức ăn kháng sinh',
+    category: 'thuoc-cho-ca',
+    soldOut: true,
+    images: [{ src: vienThucAn, alt: 'Viên thức ăn cho cá, ảnh minh họa' }],
+    tempPhoto: pelletCredit,
+  },
+  {
+    slug: 'phan-nuoc',
+    name: 'Phân nước',
+    category: 'phan-nuoc',
+    soldOut: true,
+    images: [{ src: beCa, alt: 'Hồ thủy sinh nhiều cây xanh, ảnh minh họa' }],
+    tempPhoto: {},
+  },
+  {
+    slug: 'loc-bio-sui-oxy-gex-2000',
+    name: 'Lọc Bio, Sủi Oxy Gex 2000 1 vòi',
+    category: 'loc-oxy',
+    soldOut: true,
+    images: [{ src: maySui, alt: 'Máy sủi oxy cho hồ cá, ảnh minh họa' }],
+    tempPhoto: pumpCredit,
+  },
 ];
 
 export const money = (n) => n.toLocaleString('vi-VN') + ' VNĐ';

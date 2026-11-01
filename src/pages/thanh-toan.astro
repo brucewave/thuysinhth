@@ -31,6 +31,10 @@ import { site } from '../data/site.js';
           <span>Ghi chú (không bắt buộc)</span>
           <textarea name="note" rows="2"></textarea>
         </label>
+        <label class="check">
+          <input type="checkbox" name="remember" />
+          <span>Lưu thông tin và đơn này trên máy này cho lần sau</span>
+        </label>
         <button class="btn full" type="submit">{site.orderEndpoint ? 'Gửi đơn hàng' : 'Tiếp tục'}</button>
         <p>{site.name} sẽ liên hệ để xác nhận đơn, phí giao hàng và cách thanh toán.</p>
       </form>
@@ -55,7 +59,7 @@ import { site } from '../data/site.js';
 </Base>
 
 <script>
-  import { cartLines, cartTotal, clearCart } from '../scripts/store.js';
+  import { addOrder, cartLines, cartTotal, clearCart, loadProfile, saveProfile } from '../scripts/store.js';
 
   const $ = (s) => document.querySelector(s);
   const form = $('form[data-endpoint]');
@@ -70,9 +74,10 @@ import { site } from '../data/site.js';
     list.replaceChildren(
       ...lines.map((l) => {
         const li = document.createElement('li');
-        li.innerHTML = '<span></span><span></span>';
-        li.children[0].textContent = `${l.name} × ${l.qty}`;
-        li.children[1].textContent = money(l.total);
+        li.innerHTML = '<img alt="" width="64" height="64"><span></span><span class="line-price"></span>';
+        li.children[0].src = l.image;
+        li.children[1].textContent = `${l.name} × ${l.qty}`;
+        li.children[2].textContent = money(l.total);
         return li;
       }),
     );
@@ -114,6 +119,12 @@ import { site } from '../data/site.js';
     window.scrollTo(0, 0);
   }
 
+  const profile = loadProfile();
+  if (profile) {
+    for (const key of ['name', 'phone', 'address']) form.elements[key].value = profile[key] ?? '';
+    form.elements.remember.checked = true;
+  }
+
   form.addEventListener('input', (e) => {
     const em = e.target.closest('.field')?.querySelector('em');
     if (em && !em.hidden && e.target.checkValidity()) em.hidden = true;
@@ -126,6 +137,12 @@ import { site } from '../data/site.js';
     const lines = cartLines();
     const text = orderText(data, lines);
     const endpoint = form.dataset.endpoint;
+
+    if (data.remember) {
+      saveProfile({ name: data.name, phone: data.phone, address: data.address });
+      addOrder(lines, cartTotal());
+    }
+    delete data.remember;
 
     if (!endpoint) {
       const channel = form.dataset.zalo ? `qua Zalo ${form.dataset.zalo}` : 'cho cửa hàng';

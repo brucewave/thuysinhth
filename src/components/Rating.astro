@@ -1,0 +1,9 @@
+---
+import { ratingOf } from '../data/reviews.js';
+
+const { product, stars } = Astro.props;
+const { rating, count } = ratingOf(product);
+const value = stars ?? rating;
+---
+<span class="stars" aria-hidden="true"><span style={`width:${(value / 5) * 100}%`}>★★★★★</span>★★★★★</span>
+{stars === undefined && <small>{count ? `${rating} · ${count} đánh giá` : 'Chưa có đánh giá'}</small>}

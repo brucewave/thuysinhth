@@ -1,27 +1,93 @@
 ---
+import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import Crumbs from '../components/Crumbs.astro';
+import photo from '../assets/blog/guppy.jpg';
 import { site } from '../data/site.js';
 
+const tel = site.phone && `tel:${site.phone.replace(/\s/g, '')}`;
+const zaloUrl = site.zalo && `https://zalo.me/${site.zalo}`;
+const icons = {
+  chat: '<path d="M4 5h16v11H9l-5 4z"/><path d="M8.500 10.500h7"/>',
+  phone: '<path d="M5 4h4l2 5-2.500 1.500a11 11 0 0 0 5 5L15 13l5 2v4a1 1 0 0 1-1 1A16 16 0 0 1 4 5a1 1 0 0 1 1-1Z"/>',
+  mail: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>',
+  video: '<rect x="3" y="5" width="18" height="14" rx="3"/><path d="m10 9 5 3-5 3z"/>',
+  pin: '<path d="M12 21s7-6.500 7-12a7 7 0 0 0-14 0c0 5.500 7 12 7 12Z"/><circle cx="12" cy="9" r="2.500"/>',
+};
 const channels = [
-  site.phone && { label: 'Điện thoại', text: site.phone, url: `tel:${site.phone.replace(/\s/g, '')}` },
-  site.zalo && { label: 'Zalo', text: site.zalo, url: `https://zalo.me/${site.zalo}` },
-  site.email && { label: 'Email', text: site.email, url: `mailto:${site.email}` },
-  site.facebook && { label: 'Facebook', text: 'Trang Facebook', url: site.facebook },
-  site.tiktok && { label: 'TikTok', text: '@thuysinhth', url: site.tiktok },
-  site.address && { label: 'Địa chỉ', text: site.address },
+  site.zalo && { icon: 'chat', label: 'Zalo', text: site.phone, hint: 'Gửi được cả ảnh và video hồ cá', url: zaloUrl, external: true },
+  site.phone && { icon: 'phone', label: 'Điện thoại', text: site.phone, hint: 'Gọi trực tiếp cho cửa hàng', url: tel },
+  site.email && { icon: 'mail', label: 'Email', text: site.email, hint: 'Gửi thư cho cửa hàng', url: `mailto:${site.email}` },
+  site.facebook && { icon: 'chat', label: 'Facebook', text: 'Trang Facebook', hint: 'Nhắn tin qua Facebook', url: site.facebook, external: true },
+  site.tiktok && { icon: 'video', label: 'TikTok', text: '@thuysinhth', hint: site.tiktokStats, url: site.tiktok, external: true },
+  site.address && { icon: 'pin', label: 'Địa chỉ', text: site.address, hint: 'Khu vực của cửa hàng' },
 ].filter(Boolean);
 ---
-<Base title="Liên hệ">
+<Base title="Liên hệ" description={`Liên hệ ${site.name} qua Zalo, điện thoại hoặc TikTok để hỏi về sản phẩm, đơn hàng và cách nuôi cá.`}>
   <Crumbs items={[{ name: 'Liên hệ' }]} />
-  <div class="wrap">
-    <h1 class="page-title">Liên hệ</h1>
-    {channels.length ? (
-      <div class="spec-box">
-        <ul>{channels.map((c) => <li>{c.label}: {c.url ? <a href={c.url}>{c.text}</a> : c.text}</li>)}</ul>
+
+  <header class="post-hero wrap">
+    <div class="post-hero-box">
+      <div class="post-hero-text">
+        <span class="eyebrow">Liên hệ</span>
+        <h1>Cá có vấn đề? Cứ hỏi {site.name}</h1>
+        <p>Hỏi về sản phẩm, đơn hàng hay cách chăm hồ đều được.</p>
+        <div class="hero-actions contact-actions">
+          {zaloUrl && <a class="btn accent" href={zaloUrl} target="_blank" rel="noopener">Nhắn Zalo</a>}
+          {tel && <a class="btn ghost-light" href={tel}>Gọi {site.phone}</a>}
+        </div>
       </div>
-    ) : (
-      <p class="note">Thông tin liên hệ đang được cập nhật.</p>
-    )}
+      <div class="post-hero-img">
+        <Image src={photo} alt="Cá bảy màu bơi trong hồ thủy sinh" widths={[480, 760]} sizes="(max-width: 900px) 100vw, 560px" format="webp" loading="eager" />
+      </div>
+    </div>
+  </header>
+
+  <div class="wrap contact">
+    <section aria-label="Kênh liên hệ">
+      <div class="contact-grid">
+        {channels.map((c) => {
+          const Tag = c.url ? 'a' : 'div';
+          return (
+            <Tag class="contact-card" href={c.url} target={c.external ? '_blank' : undefined} rel={c.external ? 'noopener' : undefined}>
+              <span class="contact-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={icons[c.icon]}></svg>
+              </span>
+              <small>{c.label}</small>
+              <strong>{c.text}</strong>
+              <span class="contact-hint">{c.hint}</span>
+            </Tag>
+          );
+        })}
+      </div>
+    </section>
+
+    <div class="contact-more">
+      <section class="contact-tips" aria-labelledby="gui-kem">
+        <h2 id="gui-kem">Để được tư vấn nhanh, gửi kèm</h2>
+        <ol>
+          <li>Kích thước hồ và loại lọc đang dùng</li>
+          <li>Loại cá, số lượng và thời gian đã nuôi</li>
+          <li>Ảnh hoặc video rõ cá và hồ</li>
+          <li>Những gì bạn đã thay đổi gần đây: thay nước, thêm cá, dùng thuốc</li>
+        </ol>
+      </section>
+
+      <section class="faq contact-faq">
+        <h2>Câu hỏi thường gặp</h2>
+        <details>
+          <summary>Đặt hàng như thế nào?</summary>
+          <p>Thêm sản phẩm vào giỏ, điền thông tin nhận hàng rồi gửi nội dung đơn qua Zalo {site.zalo} để hoàn tất.</p>
+        </details>
+        <details>
+          <summary>Phí giao hàng và thanh toán ra sao?</summary>
+          <p>{site.name} sẽ xác nhận phí giao hàng và cách thanh toán khi liên hệ với bạn về đơn hàng.</p>
+        </details>
+        <details>
+          <summary>Mới nuôi cá thì nên bắt đầu từ đâu?</summary>
+          <p>Đọc <a href="/blog/co-ban-ve-nuoi-ca-p1-nuoi-ca-qua-de/">15 điều cần làm khi mới nuôi cá</a>, phần lớn thắc mắc của người mới đều có trong đó.</p>
+        </details>
+      </section>
+    </div>
   </div>
 </Base>
