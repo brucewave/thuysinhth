@@ -134,7 +134,7 @@ const stars = (n) => `width:${(n / 5) * 100}%`;
         <strong>{site.name}</strong>
         <small>{site.tagline}{site.tiktokStats && ` · ${site.tiktokStats}`}</small>
       </div>
-      <a class="tt-ghost" href="/">Truy cập</a>
+      {site.facebook ? <a class="tt-ghost" href={site.facebook} target="_blank" rel="noopener">Truy cập</a> : <a class="tt-ghost" href="/">Truy cập</a>}
     </section>
 
     <section class="tt-card tt-desc">
@@ -293,7 +293,7 @@ const stars = (n) => `width:${(n / 5) * 100}%`;
 <style is:global>
 
   .tt-brand { flex: 1; display: flex; align-items: center; gap: 8px; min-width: 0; color: var(--tt-ink); font-weight: 800; text-decoration: none; }
-  .tt-brand img { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; }
+  .tt-brand img { width: 30px; height: 30px; object-fit: contain; }
 
   .tt-gallery { position: relative; background: #fff; }
   .tt-slides { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; aspect-ratio: 1; }
@@ -351,8 +351,8 @@ const stars = (n) => `width:${(n / 5) * 100}%`;
   .tt-shop { display: flex; align-items: center; gap: 12px; }
   .tt-shop > div { flex: 1; min-width: 0; display: grid; }
   .tt-shop small { color: var(--tt-muted); font-size: 12px; }
-  .tt-shop-logo { width: 48px; height: 48px; border-radius: 50%; overflow: hidden; border: 1px solid var(--tt-line); flex: none; }
-  .tt-shop-logo img { width: 100%; height: 100%; object-fit: cover; }
+  .tt-shop-logo { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 50%; border: 1px solid var(--tt-line); background: #fff; flex: none; }
+  .tt-shop-logo img { width: 74%; height: auto; }
   .tt-ghost { padding: 6px 14px; border: 1px solid var(--tt-line); border-radius: 4px; color: var(--tt-ink); font-size: 13px; font-weight: 600; text-decoration: none; }
 
   .tt-desc-body { margin-top: 10px; font-size: 14px; }

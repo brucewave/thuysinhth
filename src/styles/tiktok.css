@@ -90,7 +90,7 @@ body.bare .cart-foot .btn:hover { background: var(--tt-red-dark); }
 .tt-co-section-head h2 { flex: 1; }
 .tt-co-section-head button { padding: 0; border: 0; background: none; color: var(--tt-red); font-size: 13px; font-weight: 600; }
 .tt-co-shop { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; font-weight: 800; font-size: 14px; }
-.tt-co-shop img { width: 22px; height: 22px; border-radius: 50%; }
+.tt-co-shop img { width: 24px; height: 24px; object-fit: contain; }
 .tt-co .checkout-lines { margin: 0; padding: 0; list-style: none; }
 .tt-co .checkout-lines li { display: grid; grid-template-columns: 72px minmax(0, 1fr) auto; grid-template-rows: auto auto; gap: 2px 12px; padding-block: 10px; }
 .tt-co .line-thumb { grid-row: 1 / 3; }
