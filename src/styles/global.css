@@ -218,7 +218,7 @@ button { cursor: pointer; }
 .all-tile:hover { background: var(--blue); }
 
 /* Video TikTok */
-.tiktok { padding-bottom: 40px; }
+.tiktok { padding-block: 40px; }
 .tiktok-stats { color: var(--muted); font-size: .95rem; }
 .tiktok-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
 .tiktok-grid iframe { width: 100%; aspect-ratio: 9 / 16; border: 0; border-radius: var(--radius); background: var(--blue-dark); }
