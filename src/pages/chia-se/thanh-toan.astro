@@ -1,0 +1,120 @@
+---
+// Trang thanh toán kiểu TikTok Shop cho khách vào từ link chia sẻ. Logic dùng chung với /thanh-toan/.
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import '../../styles/tiktok.css';
+import mark from '../../assets/brand/mark.png';
+import { site } from '../../data/site.js';
+---
+<Base title="Thanh toán" bare>
+  <meta slot="head" name="robots" content="noindex" />
+  <meta slot="head" name="theme-color" content="#ffffff" />
+
+  <div class="tt tt-co">
+    <header class="tt-top">
+      <button class="tt-icon" type="button" data-back aria-label="Quay lại">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 5-7 7 7 7"/></svg>
+      </button>
+      <h1 class="tt-top-title">Thanh toán</h1>
+      <button class="tt-icon" type="button" data-open-cart aria-label="Mở giỏ hàng">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round" aria-hidden="true"><path d="M3 4h2.5l2.2 11h10.6L20.5 7.5H6.3"/><circle cx="9.5" cy="19.5" r="1.4"/><circle cx="16.5" cy="19.5" r="1.4"/></svg>
+        <span class="cart-count" hidden>0</span>
+      </button>
+    </header>
+
+    <form data-checkout hidden novalidate data-endpoint={site.orderEndpoint} data-zalo={site.zalo}>
+      <section class="tt-card">
+        <div class="tt-co-section-head">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 21s7-6.5 7-12a7 7 0 0 0-14 0c0 5.5 7 12 7 12Z"/><circle cx="12" cy="9" r="2.5"/></svg>
+          <h2>Địa chỉ nhận hàng</h2>
+        </div>
+        <label class="field">
+          <span>Họ và tên</span>
+          <input name="name" autocomplete="name" required />
+          <em hidden>Vui lòng nhập họ và tên.</em>
+        </label>
+        <label class="field">
+          <span>Số điện thoại</span>
+          <input name="phone" type="tel" autocomplete="tel" inputmode="tel" required pattern="(\+84|0)[0-9 .]{8,12}" />
+          <em hidden>Vui lòng nhập số điện thoại hợp lệ, ví dụ 0901234567.</em>
+        </label>
+        <label class="field">
+          <span>Địa chỉ</span>
+          <input name="address" autocomplete="street-address" placeholder="Số nhà, đường, phường/xã, tỉnh/thành phố" required />
+          <em hidden>Vui lòng nhập địa chỉ nhận hàng.</em>
+        </label>
+      </section>
+
+      <section class="tt-card">
+        <div class="tt-co-section-head">
+          <p class="tt-co-shop"><Image src={mark} alt="" width={44} format="webp" />{site.name}</p>
+          <span style="flex:1"></span>
+          <button type="button" data-open-cart>Sửa giỏ hàng</button>
+        </div>
+        <ul class="checkout-lines" data-lines></ul>
+        <div class="tt-co-row"><span>Phí vận chuyển</span><span data-ship></span></div>
+        <label class="field">
+          <span>Lời nhắn cho shop (không bắt buộc)</span>
+          <textarea name="note" rows="2"></textarea>
+        </label>
+      </section>
+
+      <section class="tt-card">
+        <h2>Phương thức thanh toán</h2>
+        <div class="tt-co-pay">
+          <p>Xác nhận qua điện thoại<small>{site.name} gọi xác nhận đơn và cách thanh toán trước khi giao, chưa cần trả tiền ở bước này.</small></p>
+          <span class="tt-radio" aria-hidden="true"></span>
+        </div>
+      </section>
+
+      <section class="tt-card">
+        <h2>Tóm tắt đơn hàng</h2>
+        <dl>
+          <div><dt>Tổng tiền hàng</dt><dd data-subtotal></dd></div>
+          <div><dt>Phí vận chuyển</dt><dd data-ship></dd></div>
+          <div class="grand"><dt>Tổng (<span data-count></span> sản phẩm)</dt><dd data-total></dd></div>
+        </dl>
+        <label class="check">
+          <input type="checkbox" name="remember" />
+          <span>Lưu thông tin và đơn này trên máy này cho lần sau</span>
+        </label>
+      </section>
+
+      <p class="tt-co-protect">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.4 9.5 8 11 4.6-1.5 8-6 8-11V5z"/></svg>
+        Sản phẩm sản xuất tại Việt Nam bởi {site.name}
+      </p>
+
+      <div class="tt-co-bar">
+        <p>Tổng cộng<strong data-total></strong></p>
+        <button class="tt-btn tt-buy" type="submit">Đặt hàng</button>
+      </div>
+    </form>
+
+    <div class="tt-card tt-co-state" data-empty hidden>
+      <p>Giỏ hàng đang trống.</p>
+      <p><a href="/san-pham/">Xem sản phẩm</a></p>
+    </div>
+
+    <div class="tt-card tt-co-state" data-done hidden>
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m8 12.5 3 3 5-6"/></svg>
+      <p data-done-text></p>
+      <div data-manual hidden>
+        <textarea class="order-text" readonly aria-label="Nội dung đơn hàng"></textarea>
+        <div class="tt-btns">
+          <button class="tt-btn tt-add" type="button" data-copy>Sao chép nội dung đơn</button>
+          {site.zalo && <a class="tt-btn tt-buy" href={`https://zalo.me/${site.zalo}`} target="_blank" rel="noopener">Mở Zalo</a>}
+        </div>
+      </div>
+    </div>
+  </div>
+</Base>
+
+<script>
+  import '../../scripts/checkout.js';
+
+  document.querySelector('[data-back]').addEventListener('click', () => {
+    if (history.length > 1) history.back();
+    else location.href = '/';
+  });
+</script>

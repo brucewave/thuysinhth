@@ -87,6 +87,9 @@ export function clearAccount() {
 
 const dialog = document.getElementById('cart');
 
+// Trang chia sẻ (body.bare) dẫn link sản phẩm về giao diện chia sẻ.
+const productPath = document.body.classList.contains('bare') ? '/chia-se/' : '/san-pham/';
+
 function render() {
   const lines = cartLines();
   const count = lines.reduce((sum, l) => sum + l.qty, 0);
@@ -103,7 +106,7 @@ function render() {
             <img src="${l.image}" alt="" width="88" height="88">
             <div class="cart-item-info">
               <div class="cart-item-top">
-                <a href="/san-pham/${l.slug}/">${esc(l.name)}</a>
+                <a href="${productPath}${l.slug}/">${esc(l.name)}</a>
                 <button type="button" class="remove" data-remove="${l.slug}" aria-label="Xóa ${esc(l.name)} khỏi giỏ">×</button>
               </div>
               <small>${esc(l.size)}</small>
@@ -128,7 +131,7 @@ function render() {
   document.querySelector('.cart-more-list').innerHTML = more
     .map(
       ([slug, p]) => `<article class="cart-more-item">
-        <a href="/san-pham/${slug}/"><img src="${p.image}" alt="" width="144" height="144" loading="lazy">${esc(p.name)}</a>
+        <a href="${productPath}${slug}/"><img src="${p.image}" alt="" width="144" height="144" loading="lazy">${esc(p.name)}</a>
         <span class="price">${money(p.price)}</span>
         <button class="btn" type="button" data-add="${slug}" aria-label="Thêm ${esc(p.name)} vào giỏ">Thêm</button>
       </article>`,

@@ -244,7 +244,7 @@ const hasContact =site.phone || site.zalo || site.email || site.address || site.
       <div class="cart-foot" hidden>
         <div class="cart-ship"><span>Phí giao hàng</span><span data-cart-ship></span></div>
         <div class="cart-total"><span>Tổng cộng</span><span data-cart-total></span></div>
-        <a class="btn full" href="/thanh-toan/">Đặt hàng</a>
+        <a class="btn full" href={bare ? '/chia-se/thanh-toan/' : '/thanh-toan/'}>{bare ? 'Thanh toán' : 'Đặt hàng'}</a>
       </div>
     </dialog>
 

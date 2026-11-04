@@ -1,0 +1,129 @@
+/* Giao diện kiểu TikTok Shop cho luồng chia sẻ (body.bare): tông màu, giỏ hàng, trang thanh toán. */
+body.bare {
+  --tt-red: #fe2c55;
+  --tt-red-dark: #e6234a;
+  --tt-pink: #fff0f3;
+  --tt-ink: #161823;
+  --tt-muted: #8a8b91;
+  --tt-line: #ececee;
+  --tt-gold: #ffb800;
+  background: #f1f1f2;
+  color: var(--tt-ink);
+  font-size: 15px;
+  line-height: 1.5;
+}
+body.bare :focus-visible { outline: 2px solid var(--tt-red); outline-offset: 2px; box-shadow: none; }
+
+/* Khung điện thoại và thanh trên cùng, dùng chung cho mọi trang chia sẻ */
+.tt { max-width: 480px; margin-inline: auto; background: #f6f6f7; min-height: 100vh; padding-bottom: calc(76px + env(safe-area-inset-bottom)); }
+@media (min-width: 520px) { .tt { box-shadow: 0 0 0 1px var(--tt-line), 0 10px 40px rgb(0 0 0 / .08); } }
+.tt-top { position: sticky; top: 0; z-index: 20; display: flex; align-items: center; gap: 4px; padding: 6px 8px; background: #fff; border-bottom: 1px solid var(--tt-line); }
+.tt-top-title { flex: 1; margin: 0; font-size: 16px; font-weight: 800; text-align: center; }
+.tt-icon { position: relative; display: grid; place-items: center; width: 40px; height: 40px; padding: 0; border: 0; border-radius: 50%; background: none; color: var(--tt-ink); flex: none; }
+.tt-icon:hover { background: #f1f1f2; }
+.tt-icon .cart-count { position: absolute; top: 2px; right: 0; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; background: var(--tt-red); color: #fff; font-size: 11px; font-weight: 800; line-height: 18px; text-align: center; }
+.tt-card { display: block; margin: 8px 0 0; padding: 14px 16px; background: #fff; }
+.tt h2 { font-size: 15px; font-weight: 800; }
+.tt-price { margin: 0; color: var(--tt-red); font-size: 1.6rem; font-weight: 800; line-height: 1.2; }
+.tt-btn { flex: 1; display: grid; place-items: center; min-height: 44px; padding: 6px 10px; border: 0; border-radius: 6px; font-size: 14px; font-weight: 700; text-align: center; text-decoration: none; line-height: 1.2; white-space: nowrap; }
+.tt-add { background: var(--tt-pink); color: var(--tt-red); }
+.tt-add:hover { background: #ffe1e8; }
+.tt-buy { background: var(--tt-red); color: #fff; }
+.tt-buy:hover { background: var(--tt-red-dark); }
+.tt-buy[disabled] { background: #ffa3b5; cursor: not-allowed; }
+.tt-btn.full { width: 100%; }
+@media (max-width: 380px) { .tt-btn { font-size: 13px; padding-inline: 6px; } }
+
+/* Giỏ hàng: bảng trượt lên từ đáy */
+body.bare #cart {
+  inset: auto 0 0; width: min(480px, 100vw); height: auto; max-height: 82dvh; margin: 0 auto;
+  border-radius: 14px 14px 0 0; background: #f6f6f7; color: var(--tt-ink);
+}
+body.bare #cart[open] { animation: tt-up .22s ease-out; }
+body.bare #cart::backdrop { background: rgb(0 0 0 / .5); }
+@keyframes tt-up { from { transform: translateY(40px); opacity: 0; } }
+body.bare .cart-head { padding: 10px 6px 10px 16px; background: #fff; border-bottom: 1px solid var(--tt-line); }
+body.bare .cart-head h2 { font-size: 16px; }
+body.bare .cart-head h2 span::before { content: '('; }
+body.bare .cart-head h2 span::after { content: ')'; }
+body.bare .cart-head h2 span:empty::before, body.bare .cart-head h2 span:empty::after { content: none; }
+body.bare .cart-head .icon-btn { width: 40px; height: 40px; color: var(--tt-ink); }
+body.bare .cart-head .icon-btn:hover { background: #f1f1f2; }
+body.bare .cart-items { margin-top: 8px; padding: 0 16px; background: #fff; }
+body.bare .cart-item { grid-template-columns: 80px minmax(0, 1fr); gap: 12px; border-color: var(--tt-line); }
+body.bare .cart-item:last-child { border-bottom: 0; }
+body.bare .cart-item img { width: 80px; height: 80px; border-radius: 6px; }
+body.bare .cart-item a { color: var(--tt-ink); font-size: 14px; font-weight: 600; }
+body.bare .cart-item small { display: inline-block; margin-top: 4px; padding: 0 6px; border-radius: 3px; background: #f1f1f2; color: var(--tt-muted); font-size: 12px; }
+body.bare .cart-item .price { color: var(--tt-red); font-size: 15px; font-weight: 800; }
+body.bare .remove { color: var(--tt-muted); }
+body.bare .remove:hover { background: #f1f1f2; }
+body.bare .qty { height: 30px; border-color: var(--tt-line); border-radius: 4px; }
+body.bare .qty button { width: 30px; height: 28px; border-radius: 0; background: #f6f6f7; font-size: 16px; }
+body.bare .qty button:hover { background: #ececee; }
+body.bare .qty output { width: 32px; font-size: 14px; }
+body.bare .cart-empty { color: var(--tt-muted); }
+body.bare .cart-more { margin-top: 8px; padding: 12px 0; background: #fff; }
+body.bare .cart-more h3 { padding-inline: 16px; font-size: 15px; font-weight: 800; text-align: left; }
+body.bare .cart-more-item { flex-basis: 132px; padding: 0 0 8px; border: 1px solid var(--tt-line); border-radius: 6px; overflow: hidden; }
+body.bare .cart-more-item a { padding-inline: 8px; color: var(--tt-ink); font-size: 13px; font-weight: 600; }
+body.bare .cart-more-item img { height: 120px; margin-bottom: 6px; object-fit: cover; }
+body.bare .cart-more-item .price { padding-inline: 8px; color: var(--tt-red); font-size: 14px; font-weight: 800; }
+body.bare .cart-more-item .btn { min-height: 32px; margin: 4px 8px 0; padding: 4px 8px; border: 0; border-radius: 4px; background: var(--tt-pink); color: var(--tt-red); font-size: 13px; font-weight: 700; }
+body.bare .cart-foot { display: flex; align-items: center; gap: 12px; padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); background: #fff; border-color: var(--tt-line); flex-wrap: wrap; }
+body.bare .cart-foot[hidden] { display: none; }
+body.bare .cart-ship { flex-basis: 100%; margin: 0; font-size: 13px; color: var(--tt-muted); }
+body.bare .cart-total { flex: 1; flex-direction: column; margin: 0; font-size: 13px; font-weight: 600; line-height: 1.3; }
+body.bare .cart-total span:last-child { color: var(--tt-red); font-size: 18px; font-weight: 800; }
+body.bare .cart-foot .btn { flex: none; width: auto; min-width: 150px; min-height: 44px; border: 0; border-radius: 6px; background: var(--tt-red); color: #fff; font-size: 15px; font-weight: 700; }
+body.bare .cart-foot .btn:hover { background: var(--tt-red-dark); }
+
+/* Trang thanh toán */
+.tt-co .field { display: grid; gap: 4px; margin-top: 12px; }
+.tt-co .field span { color: var(--tt-muted); font-size: 13px; }
+.tt-co .field input, .tt-co .field textarea { width: 100%; padding: 10px 12px; border: 1px solid var(--tt-line); border-radius: 6px; background: #fafafa; font-size: 15px; }
+.tt-co .field input:focus, .tt-co .field textarea:focus { border-color: var(--tt-red); background: #fff; outline: none; }
+.tt-co .field input[aria-invalid='true'] { border-color: var(--tt-red); }
+.tt-co .field em { color: var(--tt-red); font-size: 12px; font-style: normal; }
+.tt-co-section-head { display: flex; align-items: center; gap: 8px; }
+.tt-co-section-head svg { color: var(--tt-red); flex: none; }
+.tt-co-section-head h2 { flex: 1; }
+.tt-co-section-head button { padding: 0; border: 0; background: none; color: var(--tt-red); font-size: 13px; font-weight: 600; }
+.tt-co-shop { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; font-weight: 800; font-size: 14px; }
+.tt-co-shop img { width: 22px; height: 22px; border-radius: 50%; }
+.tt-co .checkout-lines { margin: 0; padding: 0; list-style: none; }
+.tt-co .checkout-lines li { display: grid; grid-template-columns: 72px minmax(0, 1fr) auto; grid-template-rows: auto auto; gap: 2px 12px; padding-block: 10px; }
+.tt-co .line-thumb { grid-row: 1 / 3; }
+.tt-co .line-thumb img { width: 72px; height: 72px; border-radius: 6px; object-fit: cover; }
+.tt-co .line-thumb b { display: none; }
+.tt-co .line-name { display: grid; align-content: start; gap: 4px; min-width: 0; grid-column: 2 / 4; }
+.tt-co .line-name strong { font-size: 14px; font-weight: 600; line-height: 1.35; }
+.tt-co .line-name small { color: var(--tt-muted); font-size: 12px; }
+.tt-co .line-price { grid-column: 2 / 4; color: var(--tt-red); font-size: 15px; font-weight: 800; }
+.tt-co-row { display: flex; justify-content: space-between; gap: 12px; padding-top: 10px; border-top: 1px solid var(--tt-line); font-size: 14px; }
+.tt-co-row span:first-child { color: var(--tt-muted); }
+.tt-co-pay { display: flex; align-items: center; gap: 10px; margin-top: 10px; font-size: 14px; }
+.tt-co-pay p { flex: 1; margin: 0; }
+.tt-co-pay small { display: block; color: var(--tt-muted); font-size: 12px; }
+.tt-radio { width: 20px; height: 20px; border: 6px solid var(--tt-red); border-radius: 50%; flex: none; }
+.tt-co dl { margin: 10px 0 0; }
+.tt-co dl div { display: flex; justify-content: space-between; gap: 12px; padding-block: 3px; font-size: 14px; }
+.tt-co dt { color: var(--tt-muted); }
+.tt-co dd { margin: 0; }
+.tt-co dl .grand { margin-top: 6px; padding-top: 8px; border-top: 1px solid var(--tt-line); font-weight: 800; }
+.tt-co dl .grand dt { color: var(--tt-ink); }
+.tt-co dl .grand dd { color: var(--tt-red); }
+.tt-co .check { display: flex; align-items: flex-start; gap: 8px; margin-top: 12px; color: var(--tt-muted); font-size: 13px; }
+.tt-co .check input { accent-color: var(--tt-red); margin-top: 3px; }
+.tt-co-protect { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 14px 16px; color: var(--tt-muted); font-size: 12px; }
+.tt-co-protect svg { color: #20a464; }
+.tt-co-bar { position: fixed; bottom: 0; left: 50%; z-index: 30; display: flex; align-items: center; gap: 12px; width: min(480px, 100%); padding: 8px 12px calc(8px + env(safe-area-inset-bottom)); transform: translateX(-50%); background: #fff; border-top: 1px solid var(--tt-line); }
+.tt-co-bar p { flex: 1; margin: 0; font-size: 13px; line-height: 1.3; text-align: right; }
+.tt-co-bar strong { display: block; color: var(--tt-red); font-size: 18px; }
+.tt-co-bar .tt-btn { flex: none; min-width: 140px; }
+.tt-co-state { padding: 40px 20px; text-align: center; }
+.tt-co-state svg { color: var(--tt-red); }
+.tt-co-state p { margin: 12px 0 0; }
+.tt-co-state .order-text { width: 100%; min-height: 180px; margin-top: 14px; padding: 10px; border: 1px solid var(--tt-line); border-radius: 6px; font-size: 13px; }
+.tt-co-state .tt-btns { display: flex; gap: 8px; margin-top: 12px; }
+.tt-co-state p a { color: var(--tt-red); }

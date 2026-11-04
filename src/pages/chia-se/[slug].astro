@@ -2,6 +2,7 @@
 // Trang mở từ nút "Chia sẻ" ở chi tiết sản phẩm: bố cục điện thoại, tông màu kiểu TikTok Shop.
 import { Image, getImage } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
+import '../../styles/tiktok.css';
 import mark from '../../assets/brand/mark.png';
 import { site } from '../../data/site.js';
 import { products, money } from '../../data/products.js';
@@ -47,7 +48,17 @@ const stars = (n) => `width:${(n / 5) * 100}%`;
           <Image src={img.src} alt={img.alt} widths={[420, 640, 900]} sizes="(max-width: 480px) 100vw, 480px" format="webp" loading={i ? 'lazy' : 'eager'} />
         )) : <Image class="tt-placeholder" src={mark} alt="" width={320} format="webp" />}
       </div>
-      {images.length > 1 && <span class="tt-counter" aria-hidden="true"><span data-tt-index>1</span>/{images.length}</span>}
+      {images.length > 1 && (
+        <>
+          <button class="tt-nav prev" type="button" data-tt-go="-1" aria-label="Ảnh trước">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m15 5-7 7 7 7"/></svg>
+          </button>
+          <button class="tt-nav next" type="button" data-tt-go="1" aria-label="Ảnh sau">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg>
+          </button>
+          <span class="tt-counter" aria-hidden="true"><span data-tt-index>1</span>/{images.length}</span>
+        </>
+      )}
     </div>
     {images.length > 1 && (
       <div class="tt-thumbs">
@@ -206,7 +217,44 @@ const stars = (n) => `width:${(n / 5) * 100}%`;
       },
       { passive: true },
     );
-    thumbs.forEach((t, i) => t.addEventListener('click', () => track.scrollTo({ left: i * track.clientWidth, behavior: 'smooth' })));
+    const count = track.children.length;
+    const current = () => Math.round(track.scrollLeft / track.clientWidth);
+    const go = (i) => track.scrollTo({ left: ((i + count) % count) * track.clientWidth, behavior: 'smooth' });
+    thumbs.forEach((t, i) => t.addEventListener('click', () => go(i)));
+    document.querySelectorAll('[data-tt-go]').forEach((b) => b.addEventListener('click', () => go(current() + Number(b.dataset.ttGo))));
+
+    // Chuột không vuốt được như ngón tay: kéo ảnh bằng chuột, thả ra thì sang ảnh gần nhất theo hướng kéo.
+    let drag = null;
+    track.addEventListener('pointerdown', (e) => {
+      if (e.pointerType !== 'mouse' || e.button !== 0) return;
+      drag = { x: e.clientX, left: track.scrollLeft, start: current(), moved: false };
+      track.classList.add('dragging');
+      track.setPointerCapture(e.pointerId);
+    });
+    track.addEventListener('pointermove', (e) => {
+      if (!drag) return;
+      const dx = e.clientX - drag.x;
+      if (Math.abs(dx) > 4) drag.moved = true;
+      track.scrollLeft = drag.left - dx;
+    });
+    const end = (e) => {
+      if (!drag) return;
+      const dx = e.clientX - drag.x;
+      const target = Math.abs(dx) > track.clientWidth * 0.15 ? drag.start + (dx < 0 ? 1 : -1) : drag.start;
+      track.classList.remove('dragging');
+      drag = null;
+      track.scrollTo({ left: Math.max(0, Math.min(count - 1, target)) * track.clientWidth, behavior: 'smooth' });
+    };
+    track.addEventListener('pointerup', end);
+    track.addEventListener('pointercancel', end);
+    track.addEventListener('dragstart', (e) => e.preventDefault());
+
+    // Phím mũi tên khi đang chọn ảnh.
+    track.tabIndex = 0;
+    track.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') go(current() + 1);
+      if (e.key === 'ArrowLeft') go(current() - 1);
+    });
   }
 
   // Bảng chọn số lượng; số lượng này dùng cho cả "Thêm vào giỏ" và "Mua ngay".
@@ -226,7 +274,7 @@ const stars = (n) => `width:${(n / 5) * 100}%`;
   }
 
   // store.js đã thêm vào giỏ (data-quiet nên không mở giỏ), chỉ còn chuyển sang trang đặt hàng.
-  document.querySelector('[data-buy-now]')?.addEventListener('click', () => setTimeout(() => (location.href = '/thanh-toan/')));
+  document.querySelector('[data-buy-now]')?.addEventListener('click', () => setTimeout(() => (location.href = '/chia-se/thanh-toan/')));
 
   const more = document.querySelector('[data-tt-more]');
   const moreBtn = document.querySelector('[data-tt-more-btn]');
@@ -243,26 +291,7 @@ const stars = (n) => `width:${(n / 5) * 100}%`;
 </script>
 
 <style is:global>
-  body.bare {
-    --tt-red: #fe2c55;
-    --tt-red-dark: #e6234a;
-    --tt-pink: #fff0f3;
-    --tt-ink: #161823;
-    --tt-muted: #8a8b91;
-    --tt-line: #ececee;
-    --tt-gold: #ffb800;
-    background: #f1f1f2;
-    color: var(--tt-ink);
-    font-size: 15px;
-    line-height: 1.5;
-  }
-  .tt { max-width: 480px; margin-inline: auto; background: #f6f6f7; min-height: 100vh; padding-bottom: calc(76px + env(safe-area-inset-bottom)); }
-  @media (min-width: 520px) { .tt { box-shadow: 0 0 0 1px var(--tt-line), 0 10px 40px rgb(0 0 0 / .08); } }
 
-  .tt-top { position: sticky; top: 0; z-index: 20; display: flex; align-items: center; gap: 4px; padding: 6px 8px; background: #fff; border-bottom: 1px solid var(--tt-line); }
-  .tt-icon { position: relative; display: grid; place-items: center; width: 40px; height: 40px; border: 0; border-radius: 50%; background: none; color: var(--tt-ink); flex: none; }
-  .tt-icon:hover { background: #f1f1f2; }
-  .tt-icon .cart-count { position: absolute; top: 2px; right: 0; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; background: var(--tt-red); color: #fff; font-size: 11px; font-weight: 800; line-height: 18px; text-align: center; }
   .tt-brand { flex: 1; display: flex; align-items: center; gap: 8px; min-width: 0; color: var(--tt-ink); font-weight: 800; text-decoration: none; }
   .tt-brand img { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; }
 
@@ -270,6 +299,15 @@ const stars = (n) => `width:${(n / 5) * 100}%`;
   .tt-slides { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; aspect-ratio: 1; }
   .tt-slides::-webkit-scrollbar { display: none; }
   .tt-slides img { flex: 0 0 100%; width: 100%; height: 100%; object-fit: cover; scroll-snap-align: start; }
+  .tt-slides { cursor: grab; }
+  .tt-slides.dragging { cursor: grabbing; scroll-snap-type: none; scroll-behavior: auto; }
+  .tt-slides.dragging img { pointer-events: none; }
+  .tt-slides img { user-select: none; -webkit-user-drag: none; }
+  .tt-nav { position: absolute; top: 50%; display: grid; place-items: center; width: 36px; height: 36px; padding: 0; border: 0; border-radius: 50%; background: rgb(255 255 255 / .85); color: var(--tt-ink); box-shadow: 0 2px 8px rgb(0 0 0 / .15); transform: translateY(-50%); opacity: 0; transition: opacity .2s; }
+  .tt-nav.prev { left: 10px; }
+  .tt-nav.next { right: 10px; }
+  .tt-gallery:hover .tt-nav, .tt-nav:focus-visible { opacity: 1; }
+  @media (hover: none) { .tt-nav { opacity: 1; width: 32px; height: 32px; background: rgb(255 255 255 / .7); } }
   .tt-slides .tt-placeholder { object-fit: contain; padding: 18%; }
   .tt-counter { position: absolute; right: 12px; bottom: 12px; padding: 2px 10px; border-radius: 12px; background: rgb(0 0 0 / .45); color: #fff; font-size: 12px; font-weight: 600; }
   .tt-thumbs { display: flex; gap: 6px; padding: 8px 12px; background: #fff; overflow-x: auto; }
@@ -277,9 +315,7 @@ const stars = (n) => `width:${(n / 5) * 100}%`;
   .tt-thumbs button[aria-current='true'] { border-color: var(--tt-red); }
   .tt-thumbs img { width: 100%; height: 100%; object-fit: cover; }
 
-  .tt-card { display: block; margin: 8px 0 0; padding: 14px 16px; background: #fff; }
   .tt-main { margin-top: 0; padding-top: 10px; }
-  .tt-price { margin: 0; color: var(--tt-red); font-size: 1.6rem; font-weight: 800; line-height: 1.2; }
   .tt h1 { margin: 6px 0 0; font-size: 1.02rem; font-weight: 600; line-height: 1.45; }
   .tt-rating { display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; color: var(--tt-ink); font-size: 13px; text-decoration: none; }
   .tt-rating > span:last-child { color: var(--tt-muted); }
@@ -298,7 +334,6 @@ const stars = (n) => `width:${(n / 5) * 100}%`;
   .tt-qty-label { color: var(--tt-muted); }
 
   .tt-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
-  .tt h2 { font-size: 15px; font-weight: 800; }
   .tt-head a { color: var(--tt-muted); font-size: 13px; text-decoration: none; white-space: nowrap; }
   .tt-head a::after { content: ' ›'; }
   .tt-note { margin: 8px 0 0; color: var(--tt-muted); font-size: 12px; }
@@ -333,13 +368,6 @@ const stars = (n) => `width:${(n / 5) * 100}%`;
 
   .tt-bar { position: fixed; bottom: 0; left: 50%; z-index: 30; display: flex; align-items: center; gap: 6px; width: min(480px, 100%); padding: 8px 12px calc(8px + env(safe-area-inset-bottom)); transform: translateX(-50%); background: #fff; border-top: 1px solid var(--tt-line); }
   .tt-bar-icon { display: grid; justify-items: center; gap: 1px; width: 46px; white-space: nowrap; letter-spacing: -.2px; color: var(--tt-ink); font-size: 10px; text-decoration: none; flex: none; }
-  .tt-btn { flex: 1; display: grid; place-items: center; min-height: 44px; padding: 6px 10px; border: 0; border-radius: 6px; font-size: 14px; font-weight: 700; white-space: nowrap; text-align: center; text-decoration: none; line-height: 1.2; }
-  .tt-add { background: var(--tt-pink); color: var(--tt-red); }
-  .tt-add:hover { background: #ffe1e8; }
-  .tt-buy { background: var(--tt-red); color: #fff; }
-  .tt-buy:hover { background: var(--tt-red-dark); }
-  .tt-btn.full { width: 100%; }
-  @media (max-width: 380px) { .tt-btn { font-size: 13px; padding-inline: 6px; } }
 
   .tt-sheet { position: fixed; inset: auto 0 0; width: min(480px, 100%); max-width: none; margin: 0 auto; padding: 16px; border: 0; border-radius: 14px 14px 0 0; }
   .tt-sheet::backdrop { background: rgb(0 0 0 / .5); }

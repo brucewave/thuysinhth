@@ -22,7 +22,7 @@ document.querySelectorAll('.post-hero-box').forEach((box) => {
 
 // Nội dung đã nằm trong màn hình lúc tải trang thì giữ nguyên, tránh nháy.
 const revealItems = gsap.utils
-  .toArray('.section-head, .product-card, .all-tile, .post-card, .tiktok-grid iframe, .step, .contact-card, .contact-tips, .contact-faq, .review, .side-product')
+  .toArray('.section-head, .product-card, .post-card, .tiktok-grid iframe, .step, .contact-card, .contact-tips, .contact-faq, .review, .side-product')
   .filter((el) => el.getBoundingClientRect().top > innerHeight * 0.92);
 
 gsap.set(revealItems, { opacity: 0, y: 28 });

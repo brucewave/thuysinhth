@@ -15,7 +15,11 @@ export async function shareProduct(button) {
     await navigator.clipboard.writeText(url);
     copied = true;
   } catch {
-    prompt('Sao chép liên kết này để chia sẻ:', url);
+    try {
+      prompt('Sao chép liên kết này để chia sẻ:', url);
+    } catch {
+      // Trình duyệt nhúng không có hộp prompt.
+    }
   }
   if (copied) toast('Đã sao chép liên kết chia sẻ');
 }
