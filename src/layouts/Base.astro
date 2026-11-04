@@ -14,7 +14,7 @@ import { posts } from '../data/posts.js';
 const { title, description = site.description, image } = Astro.props;
 const fullTitle = title ? `${title} | ${site.name}` : `${site.name} | ${site.tagline}`;
 
-const catalog = { products: {}, search: [] };
+const catalog = { products: {}, search: [], shipping: site.shipping };
 for (const p of products) {
   catalog.search.push({ title: p.name, url: `/san-pham/${p.slug}/`, type: p.soldOut ? 'Sản phẩm · Sắp ra mắt' : 'Sản phẩm' });
   if (p.soldOut) continue;
@@ -240,7 +240,8 @@ const hasContact =site.phone || site.zalo || site.email || site.address || site.
         </section>
       </div>
       <div class="cart-foot" hidden>
-        <div class="cart-total"><span>Tạm tính</span><span data-cart-total></span></div>
+        <div class="cart-ship"><span>Phí giao hàng</span><span data-cart-ship></span></div>
+        <div class="cart-total"><span>Tổng cộng</span><span data-cart-total></span></div>
         <a class="btn full" href="/thanh-toan/">Đặt hàng</a>
       </div>
     </dialog>

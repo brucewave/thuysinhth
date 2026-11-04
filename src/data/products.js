@@ -14,14 +14,14 @@ import ngonTay from '../assets/vi-sinh/ngon-tay.png';
 import viSinhNuoc from '../assets/vi-sinh/vi-sinh-nuoc.jpg';
 import biofilm from '../assets/vi-sinh/biofilm.png';
 import beCa from '../assets/blog/be-ca-1.jpg';
-import vienThucAn from '../assets/tam/vien-thuc-an.jpg';
+import bonGoi from '../assets/thuc-an/bon-goi.png';
+import xoGiunGoi from '../assets/thuoc/xo-giun-goi.png';
+import khangSinhGoi from '../assets/thuoc/khang-sinh-goi.png';
+import caAnThuoc from '../assets/thuoc/ca-an-thuoc.jpg';
+import caGiun from '../assets/thuoc/ca-giun.jpg';
 import maySui from '../assets/tam/may-sui.png';
 
 // Ảnh tạm, không phải sản phẩm thật. Có ảnh thật thì thay vào images và bỏ tempPhoto.
-const pelletCredit = {
-  text: 'USFWS Mountain-Prairie, CC BY 2.0, đã cắt ảnh',
-  url: 'https://commons.wikimedia.org/wiki/File:Fish_Food_pellets.jpg',
-};
 const pumpCredit = {
   text: 'Corydoras-adolfoi, CC BY-SA 4.0, đã tách nền và làm mờ tên hãng',
   url: 'https://commons.wikimedia.org/wiki/File:Aquarium-air-pump.jpg',
@@ -96,6 +96,7 @@ export const products = [
     size: '60 g',
     headline: 'Phù hợp với mọi loại cá!',
     images: [
+      { src: bonGoi, alt: 'Bốn túi thức ăn Food Gel TH Thủy Sinh TH' },
       { src: goi, alt: 'Gói thức ăn Food Gel TH' },
       { src: khoiGel, alt: 'Khối thức ăn gel nằm trên nền sỏi trong hồ' },
       { src: namGoi, alt: 'Năm gói Food Gel TH cùng các ưu điểm chính' },
@@ -189,13 +190,16 @@ export const products = [
   },
   {
     slug: 'thuc-an-so-giun',
-    name: 'Thức ăn Sổ Giun cho cá cảnh',
+    name: 'Thức ăn Xổ Giun cho cá cảnh',
     category: 'thuoc-cho-ca',
-    price: 95000,
-    size: '30 g',
+    price: 85000,
+    size: '20 g',
     headline: 'Đưa thẳng hoạt chất vào ruột cá',
-    images: [{ src: vienThucAn, alt: 'Viên thức ăn cho cá, ảnh minh họa' }],
-    tempPhoto: pelletCredit,
+    images: [
+      { src: xoGiunGoi, alt: 'Bốn túi thức ăn Xổ Giun Thủy Sinh TH' },
+      { src: caGiun, alt: 'Cá bị giun đường ruột, giun trắng thò ra ở hậu môn' },
+      { src: caAnThuoc, alt: 'Cá tầng đáy gặm miếng thức ăn trộn thuốc' },
+    ],
     bullets: [
       'Điều trị các loại ký sinh trùng đường ruột',
       'Không thể thiếu khi nuôi các dòng cá đẻ con và xử lí cá mới',
@@ -204,7 +208,7 @@ export const products = [
     ],
     intro: [
       'Sản phẩm thức ăn trộn thuốc này được chế tạo dựa trên sự thật sinh học: cá nước ngọt tuyệt đối không uống nước và mang cá không thể hấp thu các phân tử thuốc lớn. Thay vì tạt thuốc xuống nước làm chết vi sinh và chỉ đạt nồng độ cực loãng (0.001%), thức ăn định hình bằng công nghệ kết dính giúp đưa thẳng hoạt chất vào tận ổ dịch trong ruột cá.',
-      'Không thể thiếu khi bạn nuôi cá đẻ con, vì cá đẻ con là đối tượng thường xuyên bị Capillaria tấn công, một loại giun đường ruột thường biểu hiện bằng bụng rỗng, lưng cong, teo tóp, nôn ra thức ăn và ruột lòi ra ngoài. Vì vậy thức ăn sổ giun là trang bị không thể thiếu nếu bạn không muốn cá đẻ con trong hồ ra đi lần lượt mà không rõ lí do.',
+      'Không thể thiếu khi bạn nuôi cá đẻ con, vì cá đẻ con là đối tượng thường xuyên bị Capillaria tấn công, một loại giun đường ruột thường biểu hiện bằng bụng rỗng, lưng cong, teo tóp, nôn ra thức ăn và ruột lòi ra ngoài. Vì vậy thức ăn xổ giun là trang bị không thể thiếu nếu bạn không muốn cá đẻ con trong hồ ra đi lần lượt mà không rõ lí do.',
     ],
     specsTitle: 'Hướng dẫn sử dụng',
     specs: [
@@ -212,15 +216,62 @@ export const products = [
       'Lịch phòng bệnh: cho ăn 2 ngày liên tiếp, 2 tuần 1 lần trong 3 tháng.',
       'Thành phần: Fenben 51%, Prazi 34%, Levam 15%.',
     ],
-    sections: [],
+    sectionsTitle: 'Dấu hiệu cá bị giun đường ruột',
+    sections: [
+      {
+        title: 'Giun thò ra ở hậu môn',
+        image: { src: caGiun, alt: 'Cá bị giun đường ruột, giun trắng thò ra ở hậu môn' },
+        text: [
+          'Cá bị giun nặng có thể thấy giun trắng hoặc đỏ thò ra ở hậu môn, kèm bụng rỗng, lưng cong, teo tóp, nôn ra thức ăn.',
+          'Khi đã thấy dấu hiệu này, cho ăn theo lịch trị bệnh và tiếp tục lịch phòng bệnh cho cả đàn.',
+        ],
+      },
+    ],
   },
   {
     slug: 'thuc-an-khang-sinh',
     name: 'Thức ăn kháng sinh',
     category: 'thuoc-cho-ca',
-    soldOut: true,
-    images: [{ src: vienThucAn, alt: 'Viên thức ăn cho cá, ảnh minh họa' }],
-    tempPhoto: pelletCredit,
+    price: 85000,
+    size: '20 g',
+    headline: 'Trị và phòng các bệnh nhiễm khuẩn cho cá cảnh',
+    images: [
+      { src: khangSinhGoi, alt: 'Các túi thức ăn Kháng Sinh và Food Gel TH của Thủy Sinh TH' },
+      { src: caAnThuoc, alt: 'Cá tầng đáy gặm miếng thức ăn trộn thuốc' },
+    ],
+    bullets: [
+      'Trị và phòng bệnh vi khuẩn cho cá',
+      'Không ảnh hưởng đến vi sinh có lợi trong hồ',
+      'Tối ưu hiệu quả của thuốc',
+    ],
+    intro: [
+      'Đa số người nuôi cá khi thấy cá bị nấm, lở loét, thối vây hoặc túm lắc thường có thói quen mua thuốc đổ trực tiếp vào hồ. Dựa trên các nghiên cứu khoa học thực chiến về sinh lý cá cảnh, cá nước ngọt hoàn toàn không uống nước và mang cá không thể hấp thụ các phân tử thuốc lớn. Việc đánh thuốc vào nước vừa lãng phí vừa vô tác dụng.',
+      'Thức Ăn Kháng Sinh Thủy Sinh TH được nghiên cứu và bào chế theo công thức chuẩn khoa học: kháng sinh được kết hợp trực tiếp vào nền thức ăn dạng gel giúp thuốc đi thẳng vào đường tiêu hóa của cá. Đây là phương pháp duy nhất được chứng minh mang lại hiệu quả cao trong việc điều trị các bệnh nhiễm khuẩn nội bộ và ngoài da.',
+    ],
+    specsTitle: 'Hướng dẫn sử dụng',
+    specs: [
+      'Trị bệnh: cho ăn liên tục 10 ngày liên tiếp để diệt tận gốc mầm bệnh.',
+      'Phòng bệnh cho cá mới mua hoặc cá mang bầu: cho ăn liên tục trong 5 - 7 ngày.',
+    ],
+    sectionsTitle: 'Vi khuẩn: thủ phạm gây ra 80% nguyên nhân làm chết cá',
+    sections: [
+      {
+        title: 'Tấn công nội tạng gây chết nhanh',
+        image: { src: caAnThuoc, alt: 'Cá tầng đáy gặm miếng thức ăn trộn thuốc' },
+        text: [
+          'Vi khuẩn luôn tồn tại sẵn trong môi trường nước. Khi cá bị stress do vận chuyển, thay đổi chất lượng nước, hoặc bị cắn phá lẫn nhau, hệ miễn dịch suy yếu ngay lập tức sẽ tạo cơ hội cho vi khuẩn bùng nổ.',
+          'Nhiều trường hợp cá chết hàng loạt mà không có triệu chứng ngoài da, thực chất vi khuẩn đã tấn công trực tiếp vào cơ quan nội tạng làm cá suy tạng mà chết.',
+        ],
+      },
+      {
+        title: 'Biểu hiện bên ngoài',
+        image: { src: khangSinhGoi, alt: 'Các túi thức ăn Kháng Sinh Thủy Sinh TH' },
+        text: [
+          'Các hiện tượng quen thuộc như loét da, vây rách tơi tả, túm lắc, cọ mình, nấm, xuất huyết đỏ dưới da, hay teo tóp đều có chung một thủ phạm cốt lõi là sự xâm nhập và hoành hành của vi khuẩn.',
+          'Vì vậy kháng sinh là một phương pháp khoa học đã được chứng minh là cực kì hiệu quả để giải quyết vấn đề đau đầu này.',
+        ],
+      },
+    ],
   },
   {
     slug: 'phan-nuoc',

@@ -31,6 +31,8 @@ export function cartLines() {
 }
 
 export const cartTotal = () => cartLines().reduce((sum, l) => sum + l.total, 0);
+export const shippingFee = () => (cartLines().length ? catalog.shipping || 0 : 0);
+export const grandTotal = () => cartTotal() + shippingFee();
 
 // Sản phẩm đang bán mà khách chưa có trong giỏ, dùng cho các khu gợi ý.
 export const moreProducts = () => Object.entries(catalog.products).filter(([slug]) => !cart[slug]);
@@ -133,7 +135,8 @@ function render() {
     .join('');
 
   document.querySelector('.cart-foot').hidden = !lines.length;
-  document.querySelector('[data-cart-total]').textContent = money(cartTotal());
+  document.querySelector('[data-cart-ship]').textContent = money(shippingFee());
+  document.querySelector('[data-cart-total]').textContent = money(grandTotal());
 }
 
 document.addEventListener('click', (e) => {

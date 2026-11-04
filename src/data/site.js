@@ -8,7 +8,7 @@ export const site = {
   zalo: '0935240530', // số Zalo nhận đơn, viết liền
   email: '',
   address: 'Hồ Chí Minh, Việt Nam, 7000',
-  facebook: '', // link trang Facebook
+  facebook: 'https://m.me/61584378540107', // link nhắn tin Facebook
   tiktok: 'https://www.tiktok.com/@thuysinhth',
   // Dán link video muốn ghim lên trang chủ, ví dụ:
   // 'https://www.tiktok.com/@thuysinhth/video/7300000000000000000'
@@ -22,4 +22,5 @@ export const site = {
   // URL nhận đơn dạng POST JSON (Formspree, Google Apps Script...).
   // Để trống thì đơn không được gửi đi: khách chỉ sao chép được nội dung đơn.
   orderEndpoint: '',
+  shipping: 20000, // phí giao hàng mỗi đơn, VNĐ
 };

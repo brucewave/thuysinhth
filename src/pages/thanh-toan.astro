@@ -59,8 +59,8 @@ import { site } from '../data/site.js';
 
         <dl class="checkout-totals">
           <div><dt>Tạm tính</dt><dd data-subtotal></dd></div>
-          <div><dt>Phí giao hàng</dt><dd>Báo khi xác nhận đơn</dd></div>
-          <div class="grand"><dt>Tổng tiền hàng</dt><dd data-total></dd></div>
+          <div><dt>Phí giao hàng</dt><dd data-ship></dd></div>
+          <div class="grand"><dt>Tổng cộng</dt><dd data-total></dd></div>
         </dl>
       </div>
     </aside>
@@ -83,7 +83,7 @@ import { site } from '../data/site.js';
 </Base>
 
 <script>
-  import { addOrder, cartLines, cartTotal, clearCart, loadProfile, moreProducts, saveProfile } from '../scripts/store.js';
+  import { addOrder, cartLines, cartTotal, clearCart, grandTotal, shippingFee, loadProfile, moreProducts, saveProfile } from '../scripts/store.js';
 
   const $ = (s) => document.querySelector(s);
   const form = $('form[data-endpoint]');
@@ -127,7 +127,8 @@ import { site } from '../data/site.js';
     );
 
     $('[data-subtotal]').textContent = money(cartTotal());
-    $('[data-total]').textContent = money(cartTotal());
+    $('[data-ship]').textContent = money(shippingFee());
+    $('[data-total]').textContent = money(grandTotal());
   }
 
   function validate() {
@@ -147,6 +148,8 @@ import { site } from '../data/site.js';
       'ĐƠN HÀNG THỦY SINH TH',
       ...lines.map((l) => `- ${l.name} (${l.size}) x ${l.qty}: ${money(l.total)}`),
       `Tạm tính: ${money(cartTotal())}`,
+      `Phí giao hàng: ${money(shippingFee())}`,
+      `Tổng cộng: ${money(grandTotal())}`,
       `Họ tên: ${data.name}`,
       `SĐT: ${data.phone}`,
       `Địa chỉ: ${data.address}`,
@@ -186,7 +189,7 @@ import { site } from '../data/site.js';
 
     if (data.remember) {
       saveProfile({ name: data.name, phone: data.phone, address: data.address });
-      addOrder(lines, cartTotal());
+      addOrder(lines, grandTotal());
     }
     delete data.remember;
 
@@ -202,7 +205,7 @@ import { site } from '../data/site.js';
       const res = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify({ ...data, items: lines, total: cartTotal(), text }),
+        body: JSON.stringify({ ...data, items: lines, shipping: shippingFee(), total: grandTotal(), text }),
       });
       if (!res.ok) throw new Error(res.status);
       clearCart();

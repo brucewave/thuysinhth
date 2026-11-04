@@ -102,6 +102,16 @@ const tiktokUser = site.tiktok.split('@')[1];
     </div>
   </section>
 
+  <section class="wrap" aria-labelledby="bv">
+    <div class="section-head">
+      <h2 id="bv">Blog về bể cá</h2>
+      <a class="link-more" href="/blog/">Xem tất cả</a>
+    </div>
+    <div class="grid posts">
+      {posts.map((p) => <PostCard post={p} />)}
+    </div>
+  </section>
+
   <section class="wrap tiktok" aria-labelledby="tt">
     <div class="section-head">
       <div>
@@ -114,16 +124,6 @@ const tiktokUser = site.tiktok.split('@')[1];
       {site.tiktokVideos.map((url, i) => (
         <iframe src={`https://www.tiktok.com/player/v1/${url.split('/').pop()}?description=1&music_info=0`} title={`Video TikTok ${i + 1} của ${site.name}`} loading="lazy" allow="encrypted-media; fullscreen; picture-in-picture" allowfullscreen></iframe>
       ))}
-    </div>
-  </section>
-
-  <section class="wrap" aria-labelledby="bv">
-    <div class="section-head">
-      <h2 id="bv">Blog về bể cá</h2>
-      <a class="link-more" href="/blog/">Xem tất cả</a>
-    </div>
-    <div class="grid posts">
-      {posts.map((p) => <PostCard post={p} />)}
     </div>
   </section>
 </Base>

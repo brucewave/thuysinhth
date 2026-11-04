@@ -4,6 +4,7 @@ import Base from '../layouts/Base.astro';
 import Crumbs from '../components/Crumbs.astro';
 import photo from '../assets/blog/guppy.jpg';
 import { site } from '../data/site.js';
+import { money } from '../data/products.js';
 
 const tel = site.phone && `tel:${site.phone.replace(/\s/g, '')}`;
 const zaloUrl = site.zalo && `https://zalo.me/${site.zalo}`;
@@ -18,12 +19,11 @@ const channels = [
   site.zalo && { icon: 'chat', label: 'Zalo', text: site.phone, hint: 'Gửi được cả ảnh và video hồ cá', url: zaloUrl, external: true },
   site.phone && { icon: 'phone', label: 'Điện thoại', text: site.phone, hint: 'Gọi trực tiếp cho cửa hàng', url: tel },
   site.email && { icon: 'mail', label: 'Email', text: site.email, hint: 'Gửi thư cho cửa hàng', url: `mailto:${site.email}` },
-  site.facebook && { icon: 'chat', label: 'Facebook', text: 'Trang Facebook', hint: 'Nhắn tin qua Facebook', url: site.facebook, external: true },
-  site.tiktok && { icon: 'video', label: 'TikTok', text: '@thuysinhth', hint: site.tiktokStats, url: site.tiktok, external: true },
+  site.facebook && { icon: 'chat', label: 'Facebook', text: 'Nhắn tin Facebook', hint: 'Trả lời qua Messenger', url: site.facebook, external: true },
   site.address && { icon: 'pin', label: 'Địa chỉ', text: site.address, hint: 'Khu vực của cửa hàng' },
 ].filter(Boolean);
 ---
-<Base title="Liên hệ" description={`Liên hệ ${site.name} qua Zalo, điện thoại hoặc TikTok để hỏi về sản phẩm, đơn hàng và cách nuôi cá.`}>
+<Base title="Liên hệ" description={`Liên hệ ${site.name} qua Zalo, điện thoại hoặc Facebook để hỏi về sản phẩm, đơn hàng và cách nuôi cá.`}>
   <Crumbs items={[{ name: 'Liên hệ' }]} />
 
   <header class="post-hero wrap">
@@ -81,7 +81,7 @@ const channels = [
         </details>
         <details>
           <summary>Phí giao hàng và thanh toán ra sao?</summary>
-          <p>{site.name} sẽ xác nhận phí giao hàng và cách thanh toán khi liên hệ với bạn về đơn hàng.</p>
+          <p>Phí giao hàng {money(site.shipping)} mỗi đơn. {site.name} sẽ xác nhận cách thanh toán khi liên hệ với bạn về đơn hàng.</p>
         </details>
         <details>
           <summary>Mới nuôi cá thì nên bắt đầu từ đâu?</summary>
