@@ -211,8 +211,6 @@ button { cursor: pointer; }
 .product-card:hover .add-btn span, .add-btn:focus-visible span { max-width: 130px; margin-left: 8px; }
 .soon-card .product-photo::after { content: ''; position: absolute; inset: 0; background: linear-gradient(rgba(8, 60, 120, .15), rgba(8, 60, 120, .55)); }
 .soon-badge { position: absolute; left: 50%; top: 50%; z-index: 1; transform: translate(-50%, -50%); padding: 8px 16px; border-radius: 999px; background: var(--yellow); color: var(--blue-dark); font-weight: 800; white-space: nowrap; }
-.photo-credit { margin-top: auto; color: var(--muted); font-size: .72rem; }
-.photo-credit a { color: inherit; }
 
 /* Video TikTok */
 .tiktok { padding-block: 40px; }

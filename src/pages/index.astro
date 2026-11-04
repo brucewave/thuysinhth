@@ -7,7 +7,7 @@ import hero from '../assets/khu-clo/ho-ca.png';
 import heroGel from '../assets/thuc-an/khoi-gel.png';
 import heroViSinh from '../assets/vi-sinh/ho-ca.png';
 import heroGuppy from '../assets/blog/guppy.jpg';
-import caNeon from '../assets/tam/ca-neon.jpg';
+import caDay from '../assets/thuoc/ca-an-thuoc.jpg';
 import { products, money } from '../data/products.js';
 import { posts } from '../data/posts.js';
 import { site } from '../data/site.js';
@@ -98,14 +98,12 @@ const tiktokUser = site.tiktok.split('@')[1];
       {products.map((p, i) => <ProductCard product={p} eager={i < 4} />)}
       <article class="product-card soon-card">
         <div class="product-photo">
-          <Image src={caNeon} alt="Cá neon bơi giữa cây thủy sinh, ảnh minh họa" widths={[280, 420, 560]} sizes="(max-width: 900px) 50vw, 290px" format="webp" loading="lazy" />
+          <Image src={caDay} alt="Cá tầng đáy gặm thức ăn dưới nền sỏi" widths={[280, 420, 560]} sizes="(max-width: 900px) 50vw, 290px" format="webp" loading="lazy" />
           <span class="soon-badge">Sắp ra mắt</span>
         </div>
         <div class="product-info">
-          <h3>Sản phẩm mới</h3>
-          <small>Đang chuẩn bị</small>
+          <h3>Thức ăn cho cá tầng đáy</h3>
           <span class="price">Sắp ra mắt</span>
-          <small class="photo-credit">Ảnh: <a href="https://commons.wikimedia.org/wiki/File:Neonsalmler_Paracheirodon_innesi.jpg" target="_blank" rel="noopener">Holger Krisp, CC BY 3.0</a></small>
         </div>
       </article>
     </div>
