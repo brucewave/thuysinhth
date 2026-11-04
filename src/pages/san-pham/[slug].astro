@@ -104,6 +104,7 @@ const bagIcon =
               <button class="btn shine" type="button" data-add={p.slug} data-pdp="1"><Fragment set:html={bagIcon} />Thêm vào giỏ</button>
             </div>
             <ul class="checks">{p.bullets.map((b) => <li>{b}</li>)}</ul>
+            {p.warning && <p class="pdp-warning">{p.warning}</p>}
             <p class="pdp-lead">{p.intro[0]}</p>
           </>
         )}

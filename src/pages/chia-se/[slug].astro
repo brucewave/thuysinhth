@@ -141,6 +141,7 @@ const stars = (n) => `width:${(n / 5) * 100}%`;
       <h2>Giới thiệu về sản phẩm này</h2>
       <div class="tt-desc-body" data-tt-more>
         {p.bullets?.length > 0 && <ul class="tt-checks">{p.bullets.map((b) => <li>{b}</li>)}</ul>}
+        {p.warning && <p class="tt-warning">{p.warning}</p>}
         {p.intro?.map((t) => <p>{t}</p>)}
         {p.specs && (
           <>
@@ -363,6 +364,7 @@ const stars = (n) => `width:${(n / 5) * 100}%`;
   .tt-desc-body a { color: var(--tt-red); }
   .tt-checks { list-style: none; padding: 0 !important; }
   .tt-checks li { position: relative; padding-left: 22px; margin-bottom: 4px; }
+  .tt-warning { color: #b3261e; font-weight: 700; }
   .tt-checks li::before { content: '✓'; position: absolute; left: 0; color: var(--tt-red); font-weight: 800; }
   .tt-more { display: block; width: 100%; margin-top: 6px; padding: 8px; border: 0; background: none; color: var(--tt-muted); font-size: 13px; font-weight: 600; }
 

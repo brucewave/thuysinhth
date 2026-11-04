@@ -96,8 +96,8 @@ export const products = [
     size: '60 g',
     headline: 'Phù hợp với mọi loại cá!',
     images: [
-      { src: bonGoi, alt: 'Bốn túi thức ăn Food Gel TH Thủy Sinh TH' },
       { src: goi, alt: 'Gói thức ăn Food Gel TH' },
+      { src: bonGoi, alt: 'Bốn túi thức ăn Food Gel TH Thủy Sinh TH' },
       { src: khoiGel, alt: 'Khối thức ăn gel nằm trên nền sỏi trong hồ' },
       { src: namGoi, alt: 'Năm gói Food Gel TH cùng các ưu điểm chính' },
       { src: caAn, alt: 'Cá gặm khối thức ăn gel dưới đáy hồ' },
@@ -193,7 +193,7 @@ export const products = [
     name: 'Thức ăn Xổ Giun cho cá cảnh',
     category: 'thuoc-cho-ca',
     price: 85000,
-    size: '20 g',
+    size: '30 g',
     headline: 'Đưa thẳng hoạt chất vào ruột cá',
     images: [
       { src: xoGiunGoi, alt: 'Bốn túi thức ăn Xổ Giun Thủy Sinh TH' },
@@ -204,8 +204,8 @@ export const products = [
       'Điều trị các loại ký sinh trùng đường ruột',
       'Không thể thiếu khi nuôi các dòng cá đẻ con và xử lí cá mới',
       'Giữ nguyên nồng độ hoạt chất (1% - 5%), không bị pha loãng vô ích trong nước',
-      'An toàn tuyệt đối cho hệ vi sinh, cây thủy sinh, cá mang bầu và tép cảnh',
     ],
+    warning: 'Lưu Ý: Thuốc xổ giun có thể ảnh hưởng đến ốc sên và tép trong hồ',
     intro: [
       'Sản phẩm thức ăn trộn thuốc này được chế tạo dựa trên sự thật sinh học: cá nước ngọt tuyệt đối không uống nước và mang cá không thể hấp thu các phân tử thuốc lớn. Thay vì tạt thuốc xuống nước làm chết vi sinh và chỉ đạt nồng độ cực loãng (0.001%), thức ăn định hình bằng công nghệ kết dính giúp đưa thẳng hoạt chất vào tận ổ dịch trong ruột cá.',
       'Không thể thiếu khi bạn nuôi cá đẻ con, vì cá đẻ con là đối tượng thường xuyên bị Capillaria tấn công, một loại giun đường ruột thường biểu hiện bằng bụng rỗng, lưng cong, teo tóp, nôn ra thức ăn và ruột lòi ra ngoài. Vì vậy thức ăn xổ giun là trang bị không thể thiếu nếu bạn không muốn cá đẻ con trong hồ ra đi lần lượt mà không rõ lí do.',
@@ -233,7 +233,7 @@ export const products = [
     name: 'Thức ăn kháng sinh',
     category: 'thuoc-cho-ca',
     price: 85000,
-    size: '20 g',
+    size: '30 g',
     headline: 'Trị và phòng các bệnh nhiễm khuẩn cho cá cảnh',
     images: [
       { src: khangSinhGoi, alt: 'Các túi thức ăn Kháng Sinh và Food Gel TH của Thủy Sinh TH' },
@@ -243,6 +243,7 @@ export const products = [
       'Trị và phòng bệnh vi khuẩn cho cá',
       'Không ảnh hưởng đến vi sinh có lợi trong hồ',
       'Tối ưu hiệu quả của thuốc',
+      'An toàn tuyệt đối cho hệ vi sinh, cây thủy sinh, cá mang bầu và tép cảnh',
     ],
     intro: [
       'Đa số người nuôi cá khi thấy cá bị nấm, lở loét, thối vây hoặc túm lắc thường có thói quen mua thuốc đổ trực tiếp vào hồ. Dựa trên các nghiên cứu khoa học thực chiến về sinh lý cá cảnh, cá nước ngọt hoàn toàn không uống nước và mang cá không thể hấp thụ các phân tử thuốc lớn. Việc đánh thuốc vào nước vừa lãng phí vừa vô tác dụng.',
