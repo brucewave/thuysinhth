@@ -11,7 +11,7 @@ import { site } from '../data/site.js';
 import { categories, products } from '../data/products.js';
 import { posts } from '../data/posts.js';
 
-const { title, description = site.description, image } = Astro.props;
+const { title, description = site.description, image, bare = false } = Astro.props;
 const fullTitle = title ? `${title} | ${site.name}` : `${site.name} | ${site.tagline}`;
 
 const catalog = { products: {}, search: [], shipping: site.shipping };
@@ -99,9 +99,9 @@ const hasContact =site.phone || site.zalo || site.email || site.address || site.
     <link rel="icon" href="/favicon.png" type="image/png" />
     <slot name="head" />
   </head>
-  <body>
+  <body class:list={{ bare }}>
     <a class="skip" href="#main">Bỏ qua đến nội dung</a>
-    <header class="site-header">
+    {!bare && (<header class="site-header">
       <div class="wrap header-main">
         <a class="logo" href="/" aria-label={`${site.name}, về trang chủ`}>
           <span class="logo-mark"><Image src={mark} alt="" width={84} format="webp" /></span>
@@ -158,10 +158,11 @@ const hasContact =site.phone || site.zalo || site.email || site.address || site.
           <li><a href="/lien-he/">Liên hệ</a></li>
         </ul>
       </nav>
-    </header>
+    </header>)}
 
     <main id="main"><slot /></main>
 
+    {!bare && (<>
     <div class="footer-wave" aria-hidden="true">
       <svg class="wave wave-back" viewBox="0 0 2880 70" preserveAspectRatio="none"><path d="M0 35c240 0 240-30 480-30s240 30 480 30 240-30 480-30 240 30 480 30 240-30 480-30 240 30 480 30v35H0z"/></svg>
       <svg class="wave wave-front" viewBox="0 0 2880 70" preserveAspectRatio="none"><path d="M0 45c240 0 240-22 480-22s240 22 480 22 240-22 480-22 240 22 480 22 240-22 480-22 240 22 480 22v25H0z"/></svg>
@@ -224,6 +225,7 @@ const hasContact =site.phone || site.zalo || site.email || site.address || site.
         <p class="copyright">© {new Date().getFullYear()} {site.name}</p>
       </div>
     </footer>
+    </>)}
 
     <dialog id="cart" aria-labelledby="cart-title">
       <div class="cart-head">

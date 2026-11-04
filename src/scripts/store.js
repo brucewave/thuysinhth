@@ -90,10 +90,11 @@ const dialog = document.getElementById('cart');
 function render() {
   const lines = cartLines();
   const count = lines.reduce((sum, l) => sum + l.qty, 0);
-  const badge = document.querySelector('.cart-count');
-  badge.textContent = count;
-  badge.hidden = !count;
-  document.querySelector('[data-open-cart]').setAttribute('aria-label', `Mở giỏ hàng, ${count} sản phẩm`);
+  document.querySelectorAll('.cart-count').forEach((badge) => {
+    badge.textContent = count;
+    badge.hidden = !count;
+  });
+  document.querySelectorAll('[data-open-cart]').forEach((b) => b.setAttribute('aria-label', `Mở giỏ hàng, ${count} sản phẩm`));
 
   document.querySelector('.cart-items').innerHTML = lines.length
     ? lines
@@ -173,33 +174,34 @@ function runSearch() {
     : '<li class="none">Không tìm thấy kết quả.</li>';
 }
 
-search.addEventListener('input', runSearch);
-search.addEventListener('focus', runSearch);
-search.form.addEventListener('submit', (e) => {
+// Trang chia sẻ không có đầu trang nên không có ô tìm kiếm và menu.
+search?.addEventListener('input', runSearch);
+search?.addEventListener('focus', runSearch);
+search?.form.addEventListener('submit', (e) => {
   e.preventDefault();
   const first = results.querySelector('a');
   if (first) location.href = first.href;
 });
 
 document.addEventListener('click', (e) => {
-  if (!e.target.closest('.search')) results.hidden = true;
+  if (results && !e.target.closest('.search')) results.hidden = true;
 });
 
 document.addEventListener('keydown', (e) => {
   if (e.key !== 'Escape') return;
-  results.hidden = true;
+  if (results) results.hidden = true;
   if (document.activeElement.closest('.has-mega')) document.activeElement.blur();
 });
 
 // Trên điện thoại, chạm "Cửa hàng" mở danh sách thay vì chuyển trang.
-document.querySelector('.mega-toggle').addEventListener('click', (e) => {
+document.querySelector('.mega-toggle')?.addEventListener('click', (e) => {
   if (!matchMedia('(max-width: 900px)').matches) return;
   e.preventDefault();
   e.currentTarget.parentElement.classList.toggle('open');
 });
 
 const menu = document.querySelector('.menu-btn');
-menu.addEventListener('click', () => {
+menu?.addEventListener('click', () => {
   const open = document.querySelector('.site-nav').classList.toggle('open');
   menu.setAttribute('aria-expanded', open);
 });
