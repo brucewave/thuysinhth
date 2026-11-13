@@ -20,6 +20,10 @@ import khangSinhGoi from '../assets/thuoc/khang-sinh-goi.png';
 import caAnThuoc from '../assets/thuoc/ca-an-thuoc.jpg';
 import caGiun from '../assets/thuoc/ca-giun.jpg';
 import maySui from '../assets/tam/may-sui.png';
+import hdGel from '../assets/thuc-an/huong-dan.jpg';
+import hdViSinh from '../assets/vi-sinh/huong-dan.jpg';
+import hdXoGiun from '../assets/thuoc/huong-dan-xo-giun.jpg';
+import hdKhangSinh from '../assets/thuoc/huong-dan-khang-sinh.jpg';
 
 // Ảnh tạm, không phải sản phẩm thật. Có ảnh thật thì thay vào images và bỏ tempPhoto.
 const pumpCredit = {
@@ -93,7 +97,7 @@ export const products = [
     name: 'Thức ăn dạng Gel TH',
     category: 'thuc-an',
     price: 95000,
-    size: '60 g',
+    size: '65 g',
     headline: 'Phù hợp với mọi loại cá!',
     images: [
       { src: goi, alt: 'Gói thức ăn Food Gel TH' },
@@ -101,6 +105,7 @@ export const products = [
       { src: khoiGel, alt: 'Khối thức ăn gel nằm trên nền sỏi trong hồ' },
       { src: namGoi, alt: 'Năm gói Food Gel TH cùng các ưu điểm chính' },
       { src: caAn, alt: 'Cá gặm khối thức ăn gel dưới đáy hồ' },
+      { src: hdGel, alt: 'Tem hướng dẫn sử dụng và bảo quản Thức ăn Gel TH' },
     ],
     bullets: [
       'Cá con và tép đều ăn được',
@@ -108,6 +113,7 @@ export const products = [
       'Ít tan trong nước',
       'Tảo bổ sung vitamin, tăng sức đề kháng và kích màu tự nhiên',
     ],
+    warning: 'Lưu Ý: Thức ăn đã rã đông tuyệt đối KHÔNG cấp đông lại và cho cá ăn.',
     intro: [
       'Nếu bạn nuôi cá cảnh hay tép và quá mệt mỏi với cảnh cám viên rã vụn làm nước đục ngầu gây bùng phát vi khuẩn sau mỗi lần cho ăn, đây chính là giải pháp dinh dưỡng tuyệt vời dành cho bạn. Không giống như các loại thức ăn công nghiệp sấy nhiệt cao bị phá hủy vitamin và độn đầy bột mì rẻ tiền, Thức Ăn Gel TH đi đúng theo bản chất hóa sinh dinh dưỡng chuẩn mực của các chuyên gia thủy sinh quốc tế.',
       'Khi thả vào nước, khối gel chìm êm xuống đáy giữ nguyên trạng thái không tan rữa để cá con, cá tầng đáy và tép tha hồ tụ tập gặm nhấm cả ngày mà không làm suy giảm chất lượng nước.',
@@ -159,6 +165,7 @@ export const products = [
       { src: hu, alt: 'Hũ bột Vi Sinh Thủy Sinh TH' },
       { src: hoCaVs, alt: 'Hũ vi sinh đặt cạnh hồ thủy sinh' },
       { src: ngonTay, alt: 'Bột vi sinh màu nâu trên đầu ngón tay' },
+      { src: hdViSinh, alt: 'Tem hướng dẫn sử dụng Vi Sinh Thủy Sinh TH' },
     ],
     bullets: [
       'Dạng bào tử: chứa được khối lượng vi sinh có lợi cực kì lớn',
@@ -167,6 +174,14 @@ export const products = [
     intro: [
       'Nếu bạn từng châm hết chai vi sinh dạng nước này đến chai khác mà hồ cá vẫn đục mờ, cá vẫn nổi đầu hoặc chết lai rai, đây chính là giải pháp dứt điểm cho bạn. Không giống các loại vi sinh dạng nước đóng chai kín khí, nơi vi sinh tự dưỡng hiếu khí chết ngạt ngay trên kệ hàng trước khi về đến tay bạn, dòng vi sinh này sử dụng công nghệ bào tử đông khô giúp giữ được số lượng vi sinh sống cao hơn rất nhiều.',
       'Khi thả vào môi trường nước có oxy, hàng tỷ bào tử lập tức thức giấc, bám chặt vào bề mặt vật liệu lọc để thiết lập hệ thống màng sinh học (Biofilm) xử lý nước. Bột vi sinh nhanh chóng phân giải thức ăn thừa, mùn bã hữu cơ ở đáy và bẻ gãy Amoniac nguy hiểm, triệt tiêu tận gốc vi khuẩn lơ lửng gây hại, mang lại nguồn nước trong vắt như pha lê và môi trường sống hoàn hảo cho cá, tép phát triển.',
+    ],
+    specsTitle: 'Hướng dẫn sử dụng',
+    specs: [
+      'Thêm ½ muỗng café vi sinh vào cốc nước hồ hoặc nước đã khử Clo.',
+      'Khuấy đều và đợi 5 phút.',
+      'Đổ trực tiếp hỗn hợp vi sinh và nước vào trong hộp lọc hoặc nơi có dòng chảy tốt trong hồ.',
+      'Có thể đổ trực tiếp vi sinh vào trong khoang đựng vật liệu lọc.',
+      'Lưu ý: Chỉ thêm vi sinh 1 lần duy nhất. Không cần châm thêm mỗi khi thay nước.',
     ],
     sectionsTitle: 'Sự thật khoa học về vi sinh',
     sections: [
@@ -199,16 +214,17 @@ export const products = [
       { src: xoGiunGoi, alt: 'Bốn túi thức ăn Xổ Giun Thủy Sinh TH' },
       { src: caGiun, alt: 'Cá bị giun đường ruột, giun trắng thò ra ở hậu môn' },
       { src: caAnThuoc, alt: 'Cá tầng đáy gặm miếng thức ăn trộn thuốc' },
+      { src: hdXoGiun, alt: 'Tem hướng dẫn sử dụng Thức ăn Xổ Giun Thủy Sinh TH' },
     ],
     bullets: [
       'Điều trị các loại ký sinh trùng đường ruột',
       'Không thể thiếu khi nuôi các dòng cá đẻ con và xử lí cá mới',
       'Giữ nguyên nồng độ hoạt chất (1% - 5%), không bị pha loãng vô ích trong nước',
     ],
-    warning: 'Lưu Ý: Thuốc xổ giun có thể ảnh hưởng đến ốc sên và tép trong hồ',
+    warning: 'Lưu Ý: Thức ăn đã rã đông tuyệt đối KHÔNG cấp đông lại và cho cá ăn.',
     intro: [
       'Sản phẩm thức ăn trộn thuốc này được chế tạo dựa trên sự thật sinh học: cá nước ngọt tuyệt đối không uống nước và mang cá không thể hấp thu các phân tử thuốc lớn. Thay vì tạt thuốc xuống nước làm chết vi sinh và chỉ đạt nồng độ cực loãng (0.001%), thức ăn định hình bằng công nghệ kết dính giúp đưa thẳng hoạt chất vào tận ổ dịch trong ruột cá.',
-      'Không thể thiếu khi bạn nuôi cá đẻ con, vì cá đẻ con là đối tượng thường xuyên bị Capillaria tấn công, một loại giun đường ruột thường biểu hiện bằng bụng rỗng, lưng cong, teo tóp, nôn ra thức ăn và ruột lòi ra ngoài. Vì vậy thức ăn xổ giun là trang bị không thể thiếu nếu bạn không muốn cá đẻ con trong hồ ra đi lần lượt mà không rõ lí do.',
+      'Không thể thiếu khi bạn nuôi cá đẻ con, vì cá đẻ con là đối tượng thường xuyên bị Capillaria tấn công, một loại giun đường ruột thường biểu hiện bằng bụng rỗng, lưng cong, teo tóp, nôn ra thức ăn, ruột lòi ra ngoài, chướng bụng, phân trắng và bỏ ăn. Vì vậy thức ăn xổ giun là trang bị không thể thiếu nếu bạn không muốn cá đẻ con trong hồ ra đi lần lượt mà không rõ lí do.',
     ],
     specsTitle: 'Hướng dẫn sử dụng',
     specs: [
@@ -222,7 +238,7 @@ export const products = [
         title: 'Giun thò ra ở hậu môn',
         image: { src: caGiun, alt: 'Cá bị giun đường ruột, giun trắng thò ra ở hậu môn' },
         text: [
-          'Cá bị giun nặng có thể thấy giun trắng hoặc đỏ thò ra ở hậu môn, kèm bụng rỗng, lưng cong, teo tóp, nôn ra thức ăn.',
+          'Cá bị giun nặng có thể thấy giun trắng hoặc đỏ thò ra ở hậu môn, kèm bụng rỗng hoặc chướng bụng, lưng cong, teo tóp, phân trắng, bỏ ăn, nôn ra thức ăn.',
           'Khi đã thấy dấu hiệu này, cho ăn theo lịch trị bệnh và tiếp tục lịch phòng bệnh cho cả đàn.',
         ],
       },
@@ -238,6 +254,7 @@ export const products = [
     images: [
       { src: khangSinhGoi, alt: 'Các túi thức ăn Kháng Sinh và Food Gel TH của Thủy Sinh TH' },
       { src: caAnThuoc, alt: 'Cá tầng đáy gặm miếng thức ăn trộn thuốc' },
+      { src: hdKhangSinh, alt: 'Tem hướng dẫn sử dụng Thức ăn Kháng Sinh Thủy Sinh TH' },
     ],
     bullets: [
       'Trị và phòng bệnh vi khuẩn cho cá',
@@ -245,6 +262,7 @@ export const products = [
       'Tối ưu hiệu quả của thuốc',
       'An toàn tuyệt đối cho hệ vi sinh, cây thủy sinh, cá mang bầu và tép cảnh',
     ],
+    warning: 'Lưu Ý: Thức ăn đã rã đông tuyệt đối KHÔNG cấp đông lại và cho cá ăn.',
     intro: [
       'Đa số người nuôi cá khi thấy cá bị nấm, lở loét, thối vây hoặc túm lắc thường có thói quen mua thuốc đổ trực tiếp vào hồ. Dựa trên các nghiên cứu khoa học thực chiến về sinh lý cá cảnh, cá nước ngọt hoàn toàn không uống nước và mang cá không thể hấp thụ các phân tử thuốc lớn. Việc đánh thuốc vào nước vừa lãng phí vừa vô tác dụng.',
       'Thức Ăn Kháng Sinh Thủy Sinh TH được nghiên cứu và bào chế theo công thức chuẩn khoa học: kháng sinh được kết hợp trực tiếp vào nền thức ăn dạng gel giúp thuốc đi thẳng vào đường tiêu hóa của cá. Đây là phương pháp duy nhất được chứng minh mang lại hiệu quả cao trong việc điều trị các bệnh nhiễm khuẩn nội bộ và ngoài da.',
