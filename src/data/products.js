@@ -177,7 +177,7 @@ export const products = [
     ],
     specsTitle: 'Hướng dẫn sử dụng',
     specs: [
-      'Thêm ½ muỗng café vi sinh vào cốc nước hồ hoặc nước đã khử Clo.',
+      'Thêm 1 muỗng café vi sinh cho 50-100L nước vào cốc nước hồ hoặc nước đã khử Clo.',
       'Khuấy đều và đợi 5 phút.',
       'Đổ trực tiếp hỗn hợp vi sinh và nước vào trong hộp lọc hoặc nơi có dòng chảy tốt trong hồ.',
       'Có thể đổ trực tiếp vi sinh vào trong khoang đựng vật liệu lọc.',
